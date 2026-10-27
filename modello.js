@@ -131,7 +131,26 @@
     return 'todo';
   }
 
-  const api = { uid, ROOT, normalize, normalizeNode, flatten, unflatten, mergeFlat, mergeProject, mergeState, toRecord, fromRecord, statusOf };
+  // forma canonica per confrontare due stati: chiavi ordinate, voci ordinate per id,
+  // campi vuoti ignorati. Due stati con lo stesso contenuto danno lo stesso testo.
+  function canon(v) {
+    if (Array.isArray(v)) {
+      const arr = v.map(canon);
+      if (v.length && v.every(x => x && typeof x === 'object' && 'id' in x)) arr.sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      return arr;
+    }
+    if (v && typeof v === 'object') {
+      const o = {};
+      Object.keys(v).sort().forEach(k => { const x = v[k]; if (x === undefined || x === null || x === '' ) return; o[k] = canon(x); });
+      return o;
+    }
+    return v;
+  }
+  const same = (a, b) => JSON.stringify(canon(a)) === JSON.stringify(canon(b));
+  // toglie i valori non accettati da Firebase (undefined) prima dell'invio
+  const clean = v => JSON.parse(JSON.stringify(v));
+
+  const api = { uid, ROOT, normalize, normalizeNode, flatten, unflatten, mergeFlat, mergeProject, mergeState, toRecord, fromRecord, statusOf, canon, same, clean };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlanciaModel = api;
 })(typeof window !== 'undefined' ? window : globalThis);

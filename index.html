@@ -364,6 +364,90 @@ dialog::backdrop{background:rgba(20,22,28,.4)}
 @keyframes dlg{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
 @keyframes toastin{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes toastout{to{opacity:0;transform:translateY(12px)}}
+/* densità compatta */
+body{font-size:14px}
+.wrap{gap:12px;padding-block:12px 80px}
+h1{font-size:1.25rem}
+.brand svg{width:30px;height:30px}
+.hello{font-size:.74rem;margin-top:2px}
+.iconbtn{width:34px;height:34px;border-radius:9px}
+.iconbtn svg{width:16px;height:16px}
+.tabs{padding:2px;border-radius:10px}
+.tab{padding:6px 8px;font-size:.82rem}
+.tabs .slider{top:2px;bottom:2px;left:2px;width:calc(50% - 3px)}
+.tabs[data-tab="oggi"] .slider{transform:translateX(calc(100% + 2px))}
+.inbox{padding:4px 10px;border-radius:12px}
+.inbox input[type=text]{padding:5px 2px}
+.board{border-radius:14px}
+.bhead{padding:10px 12px 6px}
+.bgroup h3{padding:8px 12px 2px}
+.bproj{padding:6px 12px 7px}
+.bname{font-size:.9rem}
+.bnext{font-size:.76rem}
+.add{gap:6px}
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=search]{padding:8px 10px;border-radius:9px}
+select{padding:7px 9px;border-radius:9px}
+.btn{padding:8px 14px;font-size:.84rem;border-radius:9px}
+.btn.small{padding:6px 10px;font-size:.76rem}
+.hint{font-size:.7rem;margin-top:-6px}
+.chip{padding:4px 10px;font-size:.78rem}
+.list{gap:10px}
+.card{border-radius:14px}
+.chead{padding:10px 8px 9px 4px;gap:4px 6px}
+.ctitle textarea.title,.ctitle .ptitle{font-size:1rem}
+.pct{font-size:.85rem;padding-top:2px}
+.meta{font-size:.72rem;gap:3px 8px}
+.tag{font-size:.6rem;padding:1px 6px}
+.cbody{padding:6px 8px 8px 4px}
+.nrow{grid-template-columns:16px 24px auto minmax(0,1fr) auto;gap:4px;padding:3px 0}
+.state{width:22px;height:22px}
+.state svg{width:12px;height:12px}
+.toggle{width:24px;height:24px}
+.grip{width:16px;height:24px}
+.more{width:28px;height:28px}
+.more svg{width:16px;height:16px}
+textarea.inline{line-height:1.3;padding:1px 5px;margin-left:-5px}
+textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
+.children{margin-left:20px;padding-left:8px}
+.addline{margin:4px 0 2px 48px}
+.children>.addline{margin-left:30px}
+.addline input{padding:6px 9px;font-size:.84rem}
+.actions{gap:5px;padding:2px 0 8px 48px}
+.card>.actions{padding:0 10px 10px 50px}
+.act{padding:4px 9px;font-size:.74rem}
+.act svg{width:13px;height:13px}
+.sharebox{margin-left:48px}
+.week{gap:4px}
+.day{padding:6px 0 5px;border-radius:10px}
+.day b{font-size:.92rem}
+.orow{padding:8px 10px;border-radius:10px;margin-bottom:5px}
+.weekly{padding:12px 14px;border-radius:14px}
+.toast span{font-size:.84rem}
+@media (max-width:600px){
+  body{font-size:13.5px}
+  .wrap{gap:10px;padding-left:max(10px, env(safe-area-inset-left,0px));padding-right:max(10px, env(safe-area-inset-right,0px))}
+  .nrow{grid-template-columns:14px 20px auto minmax(0,1fr) auto;gap:3px}
+  .grip{width:14px}
+  .grip svg{width:10px;height:14px}
+  .toggle{width:20px;height:22px}
+  .toggle svg{width:12px;height:12px}
+  .state{width:20px;height:20px}
+  .state svg{width:11px;height:11px}
+  .more{width:26px;height:26px}
+  .chead{padding:9px 6px 8px 2px}
+  .ctitle textarea.title,.ctitle .ptitle{font-size:.96rem}
+  .children{margin-left:10px;padding-left:4px}
+  .addline{margin-left:40px}
+  .children>.addline{margin-left:24px}
+  .actions,.card>.actions{padding-left:10px;padding-right:6px}
+  .sharebox{margin-left:10px}
+  .bproj{padding:6px 10px 7px}
+  .bhead,.bgroup h3{padding-left:10px;padding-right:10px}
+  .flap{font-size:.66rem}
+  .day small{font-size:.56rem;letter-spacing:.04em}
+  .add #np-title{flex-basis:100%}
+  .add #np-cat{flex:1 1 0}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.splash{display:none}}
 </style>
 </head>
@@ -1521,7 +1605,9 @@ dialog::backdrop{background:rgba(20,22,28,.4)}
   const stripShare = list => list.map(r=>{ const x=Object.assign({},r); delete x.share; return x; });
   window.Plancia = {
     getState(){ const pr={}; Object.entries(projects).forEach(([k,v])=>{ if(!v.example) pr[k]=M.toRecord(v); }); return {projects:pr, deleted:JSON.parse(JSON.stringify(deleted)), prefs:JSON.parse(JSON.stringify(prefs))}; },
-    apply(state){
+    apply(incoming){
+      // unione con lo stato attuale: nulla di ciò che è stato scritto nel frattempo va perso
+      const state=M.mergeState(this.getState(), incoming);
       const examples={}; Object.entries(projects).forEach(([k,v])=>{ if(v.example) examples[k]=v; });
       const next=Object.assign(Object.keys(state.projects).length?{}:examples, {});
       Object.entries(state.projects).forEach(([k,r])=>{ next[k]=M.fromRecord(r); });
@@ -1567,7 +1653,9 @@ dialog::backdrop{background:rgba(20,22,28,.4)}
       if(pendingLocal && d.perm==='edit' && window.PlanciaSync) window.PlanciaSync.pushGuest(sid);
     },
     guestState(sid){ const g=guest[sid]; if(!g) return null; return {nodes:M.flatten(g.p.items), deletedNodes:g.p.deletedNodes, perm:g.meta.perm, action:g.lastAction}; },
-    applyGuest(sid, remote){ const g=guest[sid]; if(!g) return; g.p.items=M.unflatten(remote.nodes, M.ROOT).map(n=>M.normalizeNode(n)); g.p.deletedNodes=remote.deletedNodes||{}; g.lastAction=''; saveGuest(); render(); },
+    applyGuest(sid, remote){ const g=guest[sid]; if(!g) return;
+      const m=M.mergeFlat(M.flatten(g.p.items), remote.nodes||[], g.p.deletedNodes, remote.deletedNodes||{});
+      g.p.items=M.unflatten(m.list, M.ROOT).map(n=>M.normalizeNode(n)); g.p.deletedNodes=m.del; g.lastAction=''; saveGuest(); render(); },
     clearGuest(){ guest={}; saveGuest(); render(); },
     syncUser(u){ syncUser=u; render(); },
     sync(st){

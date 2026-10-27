@@ -72,10 +72,12 @@ async function avvia() {
       const snap = await tx.get(ref);
       const remoto = snap.exists() ? snap.data() : {};
       const u = M.mergeState(P.getState(), { projects: remoto.projects || {}, deleted: remoto.deleted || {}, prefs: remoto.prefs || {} });
-      tx.set(ref, { projects: u.projects, deleted: u.deleted, prefs: u.prefs || {}, updatedAt: Date.now() });
+      tx.set(ref, M.clean({ projects: u.projects, deleted: u.deleted, prefs: u.prefs || {}, updatedAt: Date.now() }));
       return u;
     });
     P.apply(unito);
+    // se nel frattempo sono state fatte altre modifiche, si inviano subito dopo
+    if (!M.same(P.getState().projects, unito.projects)) programma('utente', inviaUtente, 300);
     stato('ok', `Ultima sincronizzazione alle ${ora()}.`);
     allineaCondivisi();
   }
@@ -100,8 +102,8 @@ async function avvia() {
       const ids = new Set(rNodes.map(n => n.id).concat(Object.keys(rDel)));
       const locDel = {}; Object.entries(loc.deletedNodes).forEach(([k, t]) => { if (ids.has(k)) locDel[k] = t; });
       const m = M.mergeFlat(loc.nodes, rNodes, locDel, rDel);
-      tx.set(rref, { owner: utente.uid, ownerEmail: email, projTitle: loc.projTitle, rootId: info.nodeId,
-        editors, readers, nodes: m.list, deletedNodes: m.del, updatedAt: Date.now(), log: r ? (r.log || []) : [] });
+      tx.set(rref, M.clean({ owner: utente.uid, ownerEmail: email, projTitle: loc.projTitle, rootId: info.nodeId,
+        editors, readers, nodes: m.list, deletedNodes: m.del, updatedAt: Date.now(), log: r ? (r.log || []) : [] }));
       return m;
     });
     P.applyShareOwner(sid, { nodes: unito.list, deletedNodes: unito.del });
@@ -181,7 +183,7 @@ async function avvia() {
       const m = M.mergeFlat(loc.nodes, r.nodes || [], loc.deletedNodes, r.deletedNodes || {});
       const log = (r.log || []).slice(-19);
       if (loc.action) log.push({ t: Date.now(), who: email, what: loc.action });
-      tx.update(rref, { nodes: m.list, deletedNodes: m.del, updatedAt: Date.now(), log });
+      tx.update(rref, M.clean({ nodes: m.list, deletedNodes: m.del, updatedAt: Date.now(), log }));
       return m;
     });
     P.applyGuest(sid, { nodes: unito.list, deletedNodes: unito.del });
@@ -234,7 +236,7 @@ async function avvia() {
       const r = { projects: remoto.projects || {}, deleted: remoto.deleted || {}, prefs: remoto.prefs || {} };
       const loc = P.getState();
       const unito = M.mergeState(loc, r);
-      const daInviare = JSON.stringify(M.mergeState(r, { projects: {} }).projects) !== JSON.stringify(unito.projects) || (primo && !snap.exists());
+      const daInviare = !M.same(M.mergeState(r, { projects: {} }).projects, unito.projects) || (primo && !snap.exists());
       P.apply(unito);
       primo = false;
       if (daInviare) programma('utente', inviaUtente, 200);
