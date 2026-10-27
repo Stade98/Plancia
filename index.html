@@ -834,7 +834,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     if(drag) return;
     const ae=document.activeElement;
     const inLists = el => el && (listEl.contains(el) || sharedEl.contains(el) || archEl.contains(el) || inboxEl.contains(el));
-    const editing = ae && ae.matches && ae.matches('textarea.inline, [data-edit]') && inLists(ae);
+    const editing = ae && ae.matches && ae.matches('textarea.inline, [data-edit], input[type=date], input[type=time]') && inLists(ae);
     if(!force && editing){ deferred=true; renderBoard(); renderOggi(); animateBars(); return; }
     deferred=false;
     const focusId = ae && ae.id && inLists(ae) ? ae.id : null;
@@ -1276,6 +1276,8 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     if(el.dataset.perm!==undefined){ const c=ctx(el); if(window.PlanciaSync) window.PlanciaSync.setPerm(c.pid, c.node.id, el.dataset.perm, el.value).catch(err=>shareStatus(el,err)); return; }
     const f=el.dataset.field; if(!f) return;
     const c=ctx(el); if(!c.p || c.ro) return; const {node}=c; const v=el.value;
+    // la data si salva solo quando è completa (mentre si scrive l'anno il campo passa da 0002, 0020…)
+    if((f==='n-deadline'||f==='p-deadline') && v && !M.okDate(v)) return;
     if((f==='n-note'||f==='p-note') && !v.trim()) noteOpen.delete(f==='p-note'?'p'+c.pid:node.id);
     const fn = p=>{
       if(f==='p-title') p.title=v.trim().replace(/\s*\n\s*/g,' ')||p.title;

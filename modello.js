@@ -10,13 +10,15 @@
   const RIPETI = ['', 'daily', 'weekly', 'monthly', 'yearly'];
   const toPrio = v => (+v === 1 || +v === 2) ? 1 : 0;
   const ROOT = '__root';
+  // una data è valida se è completa e con un anno plausibile
+  const okDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && +v.slice(0, 4) >= 1900 && +v.slice(0, 4) <= 2200;
 
   function normalizeNode(n, fallbackU) {
     let status = n.done ? 'done' : (STATI.includes(n.status) ? n.status : 'todo');
     const kids = Array.isArray(n.children) ? n.children : (Array.isArray(n.tasks) ? n.tasks : []);
     const out = {
       id: n.id || uid(), title: String(n.title || ''), status, done: status === 'done',
-      deadline: n.deadline || '', time: /^\d{2}:\d{2}$/.test(n.time || '') ? n.time : '',
+      deadline: okDate(n.deadline) ? n.deadline : '', time: /^\d{2}:\d{2}$/.test(n.time || '') ? n.time : '',
       priority: toPrio(n.priority), note: String(n.note || ''), link: String(n.link || ''),
       assignee: String(n.assignee || ''), repeat: RIPETI.includes(n.repeat) ? n.repeat : '',
       completedAt: status === 'done' ? (n.completedAt || Date.now()) : 0,
@@ -35,7 +37,7 @@
     else items = Array.isArray(p.items) ? p.items : (Array.isArray(p.phases) ? p.phases : []);
     return {
       title: String(p.title || 'Senza titolo'), category: String(p.category || ''), priority: toPrio(p.priority),
-      deadline: p.deadline || '', note: String(p.note || ''),
+      deadline: okDate(p.deadline) ? p.deadline : '', note: String(p.note || ''),
       example: !!p.example, archived: !!p.archived, template: !!p.template, pinned: !!p.pinned, inbox: !!p.inbox,
       order: p.order || 0, createdAt: p.createdAt || base, updatedAt: base, mu: p.mu || base,
       deletedNodes: Object.assign({}, p.deletedNodes || {}),
@@ -150,7 +152,7 @@
   // toglie i valori non accettati da Firebase (undefined) prima dell'invio
   const clean = v => JSON.parse(JSON.stringify(v));
 
-  const api = { uid, ROOT, normalize, normalizeNode, flatten, unflatten, mergeFlat, mergeProject, mergeState, toRecord, fromRecord, statusOf, canon, same, clean };
+  const api = { okDate, uid, ROOT, normalize, normalizeNode, flatten, unflatten, mergeFlat, mergeProject, mergeState, toRecord, fromRecord, statusOf, canon, same, clean };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PlanciaModel = api;
 })(typeof window !== 'undefined' ? window : globalThis);
