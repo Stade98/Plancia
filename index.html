@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Plancia Progetti</title>
+<meta name="description" content="Registro personale dei progetti: fasi e sottofasi annidate, scadenze, priorità e avvisi.">
+<meta name="theme-color" content="#121c2e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Plancia">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Martian+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: plancia di volo. In alto il tabellone delle partenze (scadenze), sotto le strisce di volo (progetti) con l'albero delle fasi; in fondo avvisi e dispensa (copie). */
+:root{
+  --bg:#e8ecf1; --surface:#fbfcfd; --raised:#f1f4f8; --ink:#121c2e; --muted:#566377; --line:#cfd7e1;
+  --accent:#b57b00; --accent-soft:#f6ead0; --ok:#2e7d4f; --ok-soft:#dcefe3;
+  --board:#0d1525; --board-row:#131d31; --board-fg:#f3c454; --board-dim:#7f8ca5; --board-line:#1f2b43;
+  --t1:#d32f2f; --t2:#ef6c00; --t3:#1e88e5; --t4:#2e7d32; --t5:#c3ccd6;
+  --danger:#c62828;
+  --f-ui:"Archivo", "Segoe UI", system-ui, sans-serif;
+  --f-data:"Martian Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0a111e; --surface:#111a2b; --raised:#16213a; --ink:#e7ecf3; --muted:#94a1b6; --line:#24314a;
+  --accent:#f2b63a; --accent-soft:#33290f; --ok:#6fcf93; --ok-soft:#14301f;
+  --board:#050a14; --board-row:#0b1322; --board-fg:#f6c95a; --board-dim:#76839c; --board-line:#17223a;
+  --t5:#8792a3; --danger:#ef5350; color-scheme:dark}}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:15px;line-height:1.5;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:1000px;margin:0 auto;padding-block:22px 72px;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:22px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.mono{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+.label{font-family:var(--f-data);font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+
+/* testata */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{width:42px;height:42px;flex:0 0 auto}
+h1{margin:0;font-weight:800;font-stretch:118%;font-size:clamp(1.6rem,4.4vw,2.3rem);letter-spacing:-.01em;line-height:1}
+.brand p{margin:4px 0 0;color:var(--muted);font-size:.9rem}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--surface);font-weight:600;font-size:.88rem;border-radius:6px;padding:8px 14px;cursor:pointer;font-stretch:105%}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.amber{background:var(--accent);border-color:var(--accent);color:#14100a}
+.btn.small{font-size:.8rem;padding:5px 11px}
+
+/* riepilogo */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+@media (max-width:620px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{background:var(--surface);padding:12px 16px;display:flex;flex-direction:column;gap:2px}
+.stat b{font-family:var(--f-data);font-weight:500;font-size:1.45rem}
+.stat.red b{color:var(--t1)}
+
+/* tabellone partenze */
+.board{background:var(--board);color:var(--board-fg);border-radius:12px;overflow:hidden;box-shadow:0 1px 0 rgba(0,0,0,.05), 0 10px 30px -18px rgba(5,10,20,.6)}
+.board-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--board-line)}
+.board-head h2{margin:0;font-family:var(--f-data);font-size:.82rem;letter-spacing:.22em;font-weight:600;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.board-head h2 svg{width:18px;height:18px}
+.clock{font-family:var(--f-data);color:var(--board-dim);font-size:.78rem}
+.board-scroll{overflow-x:auto}
+table.dep{width:100%;border-collapse:collapse;font-family:var(--f-data);font-size:.8rem;min-width:560px}
+.dep th{font-weight:400;color:var(--board-dim);text-align:left;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;padding:8px 16px 6px}
+.dep td{padding:9px 16px;border-top:1px solid var(--board-line);white-space:nowrap;vertical-align:middle}
+.dep tr:nth-child(even) td{background:var(--board-row)}
+.dep td.what{white-space:normal;color:#f7f1df;font-family:var(--f-ui);font-size:.9rem;min-width:180px}
+.dep td.what small{display:block;color:var(--board-dim);font-family:var(--f-data);font-size:.68rem;letter-spacing:.03em}
+.flap{display:inline-flex;gap:2px}
+.flap span{display:inline-block;background:#1a2540;border-radius:2px;padding:1px 3px;min-width:1.25em;text-align:center;box-shadow:inset 0 -1px 0 rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.04)}
+.st{font-weight:600;letter-spacing:.08em;font-size:.7rem;padding:2px 7px;border-radius:3px}
+.st.ok{color:#8fe0ad}
+.st.board-call{color:#14100a;background:var(--board-fg)}
+.st.late{color:#fff;background:#c62828}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle}
+.board-empty{padding:18px 16px;color:var(--board-dim);font-family:var(--f-data);font-size:.8rem}
+.board-foot{padding:8px 16px 12px;display:flex;justify-content:flex-end}
+.board-foot button{background:none;border:1px solid var(--board-line);color:var(--board-dim);border-radius:5px;font-family:var(--f-data);font-size:.7rem;padding:4px 10px;cursor:pointer;letter-spacing:.06em}
+.board-foot button:hover{color:var(--board-fg)}
+
+/* nuovo progetto */
+.newproj{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,190px) auto auto;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
+@media (max-width:700px){.newproj{grid-template-columns:1fr 1fr}.newproj #np-title{grid-column:1/-1}}
+input[type=text],input[type=date],select{background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+input[type=date]{font-family:var(--f-data);font-size:.74rem;padding:4px 6px;max-width:150px}
+input[type=date].empty{opacity:.5}
+input[type=date].empty:hover,input[type=date].empty:focus{opacity:1}
+
+/* barra filtri */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{font-size:.82rem;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.toolbar select{padding:4px 8px;font-size:.82rem;border-radius:999px}
+
+/* strisce di volo (progetti) */
+.list{display:flex;flex-direction:column;gap:14px}
+.strip{background:var(--surface);border:1px solid var(--line);border-radius:10px;display:grid;grid-template-columns:8px minmax(0,1fr);overflow:hidden}
+.strip .band{background:var(--pc, var(--line))}
+.strip.complete{opacity:.86}
+.strip-main{min-width:0}
+.shead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:start;padding:14px 16px 12px}
+.code{font-family:var(--f-data);font-size:.7rem;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:2px 6px;margin-top:6px;white-space:nowrap}
+.stitle{min-width:0;display:flex;flex-direction:column;gap:6px}
+.inline{background:transparent;border:1px solid transparent;border-radius:5px;padding:2px 6px;margin-left:-6px;width:100%;min-width:0}
+.inline:hover{border-color:var(--line)}
+.inline:focus{border-color:var(--accent);background:var(--raised);outline:none}
+.stitle .inline.big{font-weight:700;font-stretch:110%;font-size:1.18rem}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:.8rem;color:var(--muted)}
+.meta .inline.cat{width:auto;max-width:170px;font-size:.8rem;color:var(--accent);font-weight:600}
+.pct{text-align:right;font-family:var(--f-data)}
+.pct b{display:block;font-size:1.5rem;font-weight:500;line-height:1.1}
+.pct span{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.strip.complete .pct b{color:var(--ok)}
+
+/* rotta: una tappa per ogni fase principale */
+.route{display:flex;align-items:center;gap:0;margin-top:4px;min-height:14px}
+.route .leg{flex:1 1 0;height:2px;background:var(--line);min-width:6px}
+.route .leg.done{background:var(--ok)}
+.route .wp{width:12px;height:12px;border-radius:50%;border:2px solid var(--muted);background:var(--surface);flex:0 0 auto}
+.route .wp.done{background:var(--ok);border-color:var(--ok)}
+.route .wp.part{background:linear-gradient(90deg,var(--accent) 50%,var(--surface) 50%);border-color:var(--accent)}
+.route .plane{width:16px;height:16px;flex:0 0 auto;color:var(--ink)}
+.route .plane.done{color:var(--ok)}
+
+.when{font-family:var(--f-data);font-size:.68rem;padding:1px 6px;border-radius:4px;white-space:nowrap;background:var(--raised);color:var(--muted)}
+.when.soon{background:var(--accent-soft);color:var(--accent)}
+.when.late{background:var(--danger);color:#fff}
+.toggle{background:none;border:0;cursor:pointer;color:var(--muted);width:26px;height:26px;border-radius:6px;padding:0;display:grid;place-items:center;transition:transform .15s;flex:0 0 auto}
+.toggle svg{width:14px;height:14px}
+.toggle[aria-expanded="true"]{transform:rotate(90deg)}
+.toggle.ghost{visibility:hidden}
+
+.sbody{border-top:1px dashed var(--line);padding:10px 16px 14px;display:flex;flex-direction:column}
+.node{display:flex;flex-direction:column}
+.nrow{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto auto;gap:6px;align-items:center;padding:3px 4px;border-radius:6px}
+.nrow:hover{background:var(--raised)}
+.children{margin-left:16px;padding-left:12px;border-left:1px solid var(--line);display:flex;flex-direction:column}
+.depth-4>.children,.depth-5>.children,.depth-6>.children{margin-left:6px;padding-left:8px}
+.ntitle{display:flex;align-items:center;gap:4px;min-width:0}
+.num{font-family:var(--f-data);font-size:.66rem;color:var(--muted);flex:0 0 auto}
+.depth-0>.nrow .inline{font-weight:600}
+.check{appearance:none;-webkit-appearance:none;width:19px;height:19px;border:2px solid var(--muted);border-radius:5px;cursor:pointer;display:grid;place-content:center;margin:0;background:var(--surface);flex:0 0 auto}
+.check:checked{background:var(--ok);border-color:var(--ok)}
+.check:checked::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+.check.part{border-color:var(--accent);background:linear-gradient(var(--accent),var(--accent)) center/8px 2px no-repeat}
+.done-text .inline{text-decoration:line-through;color:var(--muted)}
+
+/* priorità a codici di triage */
+.prio{appearance:none;-webkit-appearance:none;font-family:var(--f-data);font-size:.66rem;padding:3px 8px 3px 20px;border-radius:999px;border:1px solid var(--line);background:var(--raised) no-repeat 7px 50%/8px 8px;cursor:pointer;max-width:120px}
+.prio[data-p="1"]{background-image:radial-gradient(circle,var(--t1) 60%,transparent 62%)}
+.prio[data-p="2"]{background-image:radial-gradient(circle,var(--t2) 60%,transparent 62%)}
+.prio[data-p="3"]{background-image:radial-gradient(circle,var(--t3) 60%,transparent 62%)}
+.prio[data-p="4"]{background-image:radial-gradient(circle,var(--t4) 60%,transparent 62%)}
+.prio[data-p="5"]{background-image:radial-gradient(circle,var(--t5) 60%,transparent 62%)}
+.prio[data-p="0"]{background-image:none;padding-left:9px;color:var(--muted)}
+
+.ntools{display:flex;align-items:center}
+.nextra{display:contents}
+.icon{background:none;border:0;color:var(--muted);cursor:pointer;padding:5px;border-radius:5px;display:grid;place-items:center}
+.icon svg{width:15px;height:15px}
+.icon:hover:not(:disabled){color:var(--ink);background:var(--bg)}
+.icon:disabled{opacity:.25;cursor:default}
+.icon.armed{background:var(--danger);color:#fff;font-size:.72rem;font-weight:600;padding:4px 8px;white-space:nowrap}
+.count{font-family:var(--f-data);font-size:.66rem;color:var(--muted);margin-right:2px}
+.addline{display:flex;gap:6px;margin:4px 0 4px 0}
+.addline input{flex:1;min-width:0;font-size:.86rem;padding:6px 10px}
+.sfoot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:.8rem;color:var(--muted)}
+.sfoot label{display:inline-flex;align-items:center;gap:8px}
+@media (max-width:600px){
+  .nrow{grid-template-columns:auto auto minmax(0,1fr) auto}
+  .nrow .nextra{display:flex;gap:6px;flex-wrap:wrap;grid-column:3;grid-row:2}
+  .nrow .ntools{grid-column:4;grid-row:1 / 3}
+  .shead{grid-template-columns:minmax(0,1fr) auto}
+  .shead .code{display:none}
+}
+
+.empty{text-align:center;padding:36px 16px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:10px}
+.example{font-family:var(--f-data);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);padding:1px 6px;border-radius:4px}
+
+/* pannelli finali */
+.panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:720px){.panels{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel h2{margin:0;font-size:1rem;font-weight:700;font-stretch:110%;display:flex;align-items:center;gap:8px}
+.panel h2 svg{width:18px;height:18px;color:var(--accent)}
+.panel p{margin:0;color:var(--muted);font-size:.86rem;max-width:62ch}
+.row-btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.status{font-family:var(--f-data);font-size:.72rem;color:var(--muted)}
+.notice{font-size:.86rem;background:var(--accent-soft);color:var(--ink);border:1px solid var(--accent);padding:9px 12px;border-radius:8px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+footer{color:var(--muted);font-size:.78rem;text-align:center}
+
+@media (max-width:600px){
+  table.dep{min-width:0}
+  .dep th:nth-child(3),.dep td:nth-child(3){display:none}
+  .dep td,.dep th{padding-left:10px;padding-right:10px}
+  .dep td:first-child{padding-left:12px}
+  .flap span{padding:1px 2px;min-width:1.05em}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#121c2e"/><rect x="9" y="13" width="30" height="22" rx="3" fill="#fbfcfd"/><rect x="9" y="13" width="6" height="22" rx="2" fill="#d32f2f"/><path d="M20 24.5l4 4 8-9" fill="none" stroke="#2e7d4f" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div>
+        <h1>Plancia Progetti</h1>
+        <p>Rotte, tappe e scadenze dei tuoi progetti</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn amber small" id="install" type="button" hidden>Installa sul dispositivo</button>
+    </div>
+  </header>
+
+  <div id="notice" class="notice" hidden></div>
+
+  <section class="stats" aria-label="Riepilogo">
+    <div class="stat"><span class="label">In volo</span><b id="s-active">0</b></div>
+    <div class="stat"><span class="label">Atterrati</span><b id="s-done">0</b></div>
+    <div class="stat"><span class="label">Tappe concluse</span><b id="s-items">0/0</b></div>
+    <div class="stat red"><span class="label">Codici rossi aperti</span><b id="s-red">0</b></div>
+  </section>
+
+  <section class="board" aria-label="Prossime scadenze">
+    <div class="board-head">
+      <h2><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>Partenze</h2>
+      <span class="clock" id="clock"></span>
+    </div>
+    <div class="board-scroll">
+      <table class="dep">
+        <thead><tr><th>Data</th><th>Voce</th><th>Codice</th><th>Stato</th></tr></thead>
+        <tbody id="board"></tbody>
+      </table>
+    </div>
+    <div class="board-foot" id="board-foot" hidden><button type="button" id="board-more">Mostra tutte</button></div>
+  </section>
+
+  <form class="newproj" id="newproj" autocomplete="off">
+    <input type="text" id="np-title" placeholder="Nuovo macro progetto (es. Tesi magistrale)" aria-label="Titolo del nuovo progetto" required>
+    <input type="text" id="np-cat" placeholder="Ambito (facoltativo)" aria-label="Ambito" list="cats">
+    <select id="np-prio" aria-label="Priorità">
+      <option value="0">Priorità: nessuna</option>
+      <option value="1">1 · Rosso</option><option value="2">2 · Arancione</option><option value="3">3 · Azzurro</option><option value="4">4 · Verde</option><option value="5">5 · Bianco</option>
+    </select>
+    <button class="btn" type="submit">Aggiungi progetto</button>
+  </form>
+  <datalist id="cats"></datalist>
+
+  <div class="toolbar">
+    <div class="chips" id="filters" role="group" aria-label="Filtri"></div>
+    <div class="chips">
+      <select id="sort" aria-label="Ordina">
+        <option value="order">Ordine di inserimento</option>
+        <option value="deadline">Per scadenza</option>
+        <option value="prio">Per priorità</option>
+      </select>
+      <button class="chip" type="button" id="expand-all">Espandi tutto</button>
+      <button class="chip" type="button" id="collapse-all">Comprimi tutto</button>
+    </div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <div class="legend" aria-label="Legenda delle priorità">
+    <span><i class="dot" style="background:var(--t1)"></i>1 Rosso · immediata</span>
+    <span><i class="dot" style="background:var(--t2)"></i>2 Arancione · urgente</span>
+    <span><i class="dot" style="background:var(--t3)"></i>3 Azzurro · differibile</span>
+    <span><i class="dot" style="background:var(--t4)"></i>4 Verde · minore</span>
+    <span><i class="dot" style="background:var(--t5)"></i>5 Bianco · non urgente</span>
+  </div>
+
+  <section class="panels">
+    <div class="panel" aria-labelledby="h-avvisi">
+      <h2 id="h-avvisi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>Avvisi</h2>
+      <p>Le notifiche compaiono quando apri l'app e mentre è aperta. Per avvisi garantiti anche ad app chiusa, aggiungi le scadenze al calendario del telefono: gli allarmi sono già inclusi.</p>
+      <div class="row-btns">
+        <button class="btn small" type="button" id="notif-on">Attiva notifiche</button>
+        <label class="status" for="lead">Avvisami</label>
+        <select id="lead">
+          <option value="0">il giorno stesso</option>
+          <option value="1">1 giorno prima</option>
+          <option value="3">3 giorni prima</option>
+          <option value="7">7 giorni prima</option>
+        </select>
+      </div>
+      <div class="row-btns">
+        <button class="btn small ghost" type="button" id="ics-all">Tutte le scadenze nel calendario (.ics)</button>
+      </div>
+      <span class="status" id="notif-status"></span>
+    </div>
+
+    <div class="panel" aria-labelledby="h-dispensa">
+      <h2 id="h-dispensa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16v13H4z"/><path d="M4 7l2-4h12l2 4"/><path d="M10 12h4"/></svg>Dispensa</h2>
+      <p>I dati restano su questo dispositivo e non vengono inviati a nessuno. Tieni una scorta: esporta un backup ogni tanto e usalo per passare i dati su un altro dispositivo.</p>
+      <div class="row-btns">
+        <button class="btn small" type="button" id="exp-json">Backup (.json)</button>
+        <button class="btn small ghost" type="button" id="exp-csv">Elenco per Excel (.csv)</button>
+        <label class="btn small ghost" for="imp-json" style="display:inline-block">Importa backup<input type="file" id="imp-json" accept=".json,application/json" hidden></label>
+      </div>
+      <span class="status" id="backup-status" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <footer>Plancia Progetti · funziona anche senza connessione · i dati restano nel tuo browser</footer>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const listEl = $('#list');
+  const KEY = 'plancia-dati', UIKEY = 'plancia-ui', SETKEY = 'plancia-impostazioni', NOTIFKEY = 'plancia-avvisati';
+  const store = {
+    get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+    set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } }
+  };
+  const uid = () => Math.random().toString(36).slice(2,10);
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const PRIO = {0:'—',1:'1 Rosso',2:'2 Arancione',3:'3 Azzurro',4:'4 Verde',5:'5 Bianco'};
+  const PRIOCOL = {1:'var(--t1)',2:'var(--t2)',3:'var(--t3)',4:'var(--t4)',5:'var(--t5)'};
+  const ICON = {
+    chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>',
+    up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+    plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>',
+    trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+    plane:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" transform="rotate(90 12 12)"/></svg>'
+  };
+
+  let projects = store.get(KEY, null);
+  const firstRun = projects === null;
+  if (firstRun) projects = sampleData();
+  const ui = Object.assign({open:[], collapsed:[], filter:'attivi', cat:'', sort:'order'}, store.get(UIKEY, {}));
+  const open = new Set(ui.open), collapsed = new Set(ui.collapsed);
+  const settings = Object.assign({lead:1, notif:false}, store.get(SETKEY, {}));
+  let boardAll = false;
+  const adding = new Set();
+
+  function saveUi(){ store.set(UIKEY, {open:[...open], collapsed:[...collapsed], filter:ui.filter, cat:ui.cat, sort:ui.sort}); }
+  function save(){ if(!store.set(KEY, projects)) showNotice('Il browser non permette di salvare: esporta subito un backup dalla Dispensa.'); }
+  function showNotice(t){ const n=$('#notice'); n.textContent=t||''; n.hidden=!t; }
+
+  function sampleData(){
+    const d = n => { const x=new Date(); x.setDate(x.getDate()+n); return x.toISOString().slice(0,10); };
+    const N = (title, extra={}) => Object.assign({id:uid(), title, done:false, deadline:'', priority:0, children:[]}, extra);
+    return { [uid()]: { title:'Esempio: articolo per rivista scientifica', category:'Ricerca', priority:2, deadline:d(45), example:true, order:1, createdAt:Date.now(),
+      items:[
+        N('Revisione della letteratura',{done:true, children:[N('Ricerca su PubMed e CINAHL',{done:true}), N('Selezione degli articoli',{done:true})]}),
+        N('Stesura del manoscritto',{deadline:d(20), children:[
+          N('Introduzione e metodi',{done:true}),
+          N('Risultati',{deadline:d(6), priority:1, children:[N('Tabelle descrittive',{done:true}), N('Grafici',{deadline:d(2)})]}),
+          N('Discussione',{deadline:d(14)})]}),
+        N('Invio alla rivista',{deadline:d(45)})
+      ]}};
+  }
+
+  /* ---------- modello ---------- */
+  function normalizeNode(n){ return {id:n.id||uid(), title:String(n.title||''), done:!!n.done, deadline:n.deadline||'', priority:+n.priority||0,
+    children:(Array.isArray(n.children)?n.children:(n.tasks||[])).map(normalizeNode)}; }
+  function normalize(p){
+    const items = Array.isArray(p.items) ? p.items : (p.phases||[]);
+    return {title:String(p.title||'Senza titolo'), category:p.category||'', priority:+p.priority||0, deadline:p.deadline||'', example:!!p.example,
+      order:p.order||0, createdAt:p.createdAt||Date.now(), items:items.map(normalizeNode)};
+  }
+  Object.keys(projects).forEach(k=>projects[k]=normalize(projects[k]));
+  const value = n => { const c=n.children; return c.length ? c.reduce((a,x)=>a+value(x),0)/c.length : (n.done?1:0); };
+  const isDone = n => value(n)===1;
+  const progress = p => p.items.length ? p.items.reduce((a,x)=>a+value(x),0)/p.items.length : 0;
+  function walk(nodes, fn, path=[], depth=0){ nodes.forEach((n,i)=>{ fn(n,path,depth,i,nodes); walk(n.children, fn, path.concat(n), depth+1); }); }
+  function findNode(p,id){ let r=null; walk(p.items,(n,path,d,i,sib)=>{ if(n.id===id) r={n,sib}; }); return r; }
+  function setAll(n,v){ n.done=v; n.children.forEach(c=>setAll(c,v)); }
+  function syncDone(nodes){ nodes.forEach(n=>{ syncDone(n.children); if(n.children.length) n.done=isDone(n); }); }
+  function codeOf(id){ const ids=Object.entries(projects).sort((a,b)=>(a[1].createdAt||0)-(b[1].createdAt||0)).map(e=>e[0]); return 'P-'+String(ids.indexOf(id)+1).padStart(2,'0'); }
+
+  /* ---------- date ---------- */
+  const today = () => { const d=new Date(); d.setHours(0,0,0,0); return d; };
+  const daysTo = iso => iso ? Math.round((new Date(iso+'T00:00:00')-today())/86400000) : null;
+  const fmtShort = iso => new Date(iso+'T00:00:00').toLocaleDateString('it-IT',{day:'2-digit',month:'short'}).replace('.','').toUpperCase();
+  const fmtLong = iso => new Date(iso+'T00:00:00').toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'long',year:'numeric'});
+  function rel(n){ if(n===0) return 'oggi'; if(n===1) return 'domani'; if(n<0) return `scaduta da ${-n} gg`; return `tra ${n} gg`; }
+  const urg = n => n===null ? '' : (n<0?'late':(n<=3?'soon':''));
+
+  /* ---------- modifiche ---------- */
+  function mutate(pid, fn){ const p=projects[pid]; if(!p) return; fn(p); syncDone(p.items); p.updatedAt=Date.now(); save(); render(true); checkDeadlines(); }
+
+  /* ---------- render ---------- */
+  let deferred=false;
+  function render(force){
+    const ae=document.activeElement;
+    if(!force && ae && ae.classList && ae.classList.contains('inline') && listEl.contains(ae)){ deferred=true; return; }
+    deferred=false;
+    const focusId = ae && ae.id && listEl.contains(ae) ? ae.id : null;
+    const drafts={}; listEl.querySelectorAll('[data-add]').forEach(i=>{ if(i.value) drafts[i.id]=i.value; });
+    renderStats(); renderBoard(); renderFilters(); renderList();
+    Object.entries(drafts).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.value=v; });
+    if(focusId){ const el=document.getElementById(focusId); if(el && el.dataset.add) el.focus(); }
+  }
+
+  function renderStats(){
+    const all=Object.values(projects); let tot=0,dn=0,red=0;
+    all.forEach(p=>{ if(p.priority===1 && progress(p)<1) red++; walk(p.items,n=>{ tot++; if(isDone(n)) dn++; else if(n.priority===1 && !n.children.length) red++; }); });
+    const done=all.filter(p=>p.items.length && progress(p)===1).length;
+    $('#s-active').textContent=all.length-done; $('#s-done').textContent=done; $('#s-items').textContent=`${dn}/${tot}`; $('#s-red').textContent=red;
+  }
+
+  function deadlineList(){
+    const out=[];
+    Object.entries(projects).forEach(([pid,p])=>{
+      if(p.deadline && progress(p)<1) out.push({id:pid, pid, d:p.deadline, t:p.title, path:'Scadenza del progetto', prio:p.priority, code:codeOf(pid)});
+      walk(p.items,(n,path)=>{ if(n.deadline && !isDone(n)) out.push({id:n.id, pid, d:n.deadline, t:n.title, path:[p.title,...path.map(x=>x.title)].join(' › '), prio:n.priority||p.priority, code:codeOf(pid)}); });
+    });
+    return out.sort((a,b)=>a.d.localeCompare(b.d) || (a.prio||9)-(b.prio||9));
+  }
+
+  function flap(s){ return '<span class="flap">'+[...s].map(c=>`<span>${c===' '?'&nbsp;':esc(c)}</span>`).join('')+'</span>'; }
+
+  function renderBoard(){
+    const items=deadlineList(); const body=$('#board');
+    $('#clock').textContent = new Date().toLocaleString('it-IT',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    if(!items.length){ body.innerHTML='<tr><td colspan="4" class="board-empty">Nessuna partenza in programma. Assegna una data a un progetto o a una sua voce.</td></tr>'; $('#board-foot').hidden=true; return; }
+    const shown = boardAll ? items : items.slice(0,6);
+    body.innerHTML = shown.map(i=>{ const n=daysTo(i.d);
+      const st = n<0 ? '<span class="st late">RITARDO</span>' : (n<=3 ? '<span class="st board-call">IMBARCO</span>' : '<span class="st ok">IN ORARIO</span>');
+      return `<tr title="${esc(fmtLong(i.d))}"><td>${flap(fmtShort(i.d))}</td>
+        <td class="what">${i.prio?`<i class="dot" style="background:${PRIOCOL[i.prio]};margin-right:6px"></i>`:''}${esc(i.t)}<small>${esc(i.path)} · ${esc(rel(n))}</small></td>
+        <td>${esc(i.code)}</td><td>${st}</td></tr>`; }).join('');
+    $('#board-foot').hidden = items.length<=6;
+    $('#board-more').textContent = boardAll ? 'Mostra meno' : `Mostra tutte (${items.length})`;
+  }
+
+  function renderFilters(){
+    const cats=[...new Set(Object.values(projects).map(p=>p.category.trim()).filter(Boolean))].sort();
+    $('#cats').innerHTML=cats.map(c=>`<option value="${esc(c)}">`).join('');
+    if(ui.cat && !cats.includes(ui.cat)) ui.cat='';
+    const opts=[['attivi','In volo'],['completati','Atterrati'],['tutti','Tutti']];
+    $('#filters').innerHTML = opts.map(([k,l])=>`<button type="button" class="chip" data-filter="${k}" aria-pressed="${ui.filter===k}">${l}</button>`).join('')
+      + cats.map(c=>`<button type="button" class="chip" data-cat="${esc(c)}" aria-pressed="${ui.cat===c}">${esc(c)}</button>`).join('');
+    $('#sort').value=ui.sort;
+  }
+
+  function sortedProjects(){
+    const e=Object.entries(projects);
+    if(ui.sort==='deadline') return e.sort((a,b)=>(a[1].deadline||'9999').localeCompare(b[1].deadline||'9999'));
+    if(ui.sort==='prio') return e.sort((a,b)=>(a[1].priority||9)-(b[1].priority||9) || (a[1].order||0)-(b[1].order||0));
+    return e.sort((a,b)=>(a[1].order||0)-(b[1].order||0));
+  }
+
+  function renderList(){
+    if(!Object.keys(projects).length){ listEl.innerHTML='<div class="empty">Nessun progetto in pista.<br>Scrivi il primo nel campo qui sopra e premi <b>Aggiungi progetto</b>.</div>'; return; }
+    const rows=sortedProjects().filter(([,p])=>{ const pr=progress(p), complete=p.items.length&&pr===1;
+      if(ui.filter==='attivi'&&complete) return false; if(ui.filter==='completati'&&!complete) return false;
+      if(ui.cat&&p.category.trim()!==ui.cat) return false; return true; });
+    listEl.innerHTML = rows.length ? rows.map(([id,p])=>stripHTML(id,p)).join('') : '<div class="empty">Nessun progetto in questa vista.</div>';
+  }
+
+  const prioSelect = (id, field, v) => `<select class="prio" id="${id}" data-field="${field}" data-p="${v||0}" aria-label="Priorità">${Object.entries(PRIO).map(([k,l])=>`<option value="${k}" ${+k===(v||0)?'selected':''}>${l}</option>`).join('')}</select>`;
+  const dateInput = (id, field, v) => `<input type="date" id="${id}" data-field="${field}" value="${esc(v||'')}" class="${v?'':'empty'}" aria-label="Scadenza">`;
+
+  function routeHTML(p){
+    if(!p.items.length) return '';
+    const parts=[];
+    p.items.forEach((n,i)=>{ const v=value(n); const cls=v===1?'done':(v>0?'part':'');
+      if(i>0){ const prevDone=value(p.items[i-1])===1; parts.push(`<span class="leg ${prevDone?'done':''}"></span>`); }
+      parts.push(`<span class="wp ${cls}" title="${esc((i+1)+'. '+n.title)}"></span>`); });
+    const all=progress(p)===1;
+    parts.push(`<span class="leg ${all?'done':''}"></span><span class="plane ${all?'done':''}">${ICON.plane}</span>`);
+    return `<div class="route" aria-hidden="true">${parts.join('')}</div>`;
+  }
+
+  function stripHTML(id,p){
+    const pr=progress(p), pct=Math.round(pr*100), isOpen=open.has(id), complete=p.items.length&&pr===1;
+    let tot=0; walk(p.items,()=>tot++);
+    const n=daysTo(p.deadline);
+    return `<article class="strip ${complete?'complete':''}" data-pid="${id}" style="--pc:${PRIOCOL[p.priority]||'var(--line)'}">
+      <div class="band" aria-hidden="true"></div>
+      <div class="strip-main">
+        <div class="shead">
+          <span class="code">${codeOf(id)}</span>
+          <div class="stitle">
+            <div style="display:flex;align-items:center;gap:4px;min-width:0">
+              <button class="toggle" data-act="toggle-proj" aria-expanded="${isOpen}" aria-label="Mostra le fasi" type="button">${ICON.chev}</button>
+              <input class="inline big" id="t-${id}" data-field="p-title" value="${esc(p.title)}" aria-label="Titolo progetto">
+            </div>
+            <div class="meta">
+              ${p.example?'<span class="example">esempio</span>':''}
+              <input class="inline cat" id="c-${id}" data-field="p-category" value="${esc(p.category)}" placeholder="+ ambito" list="cats" aria-label="Ambito">
+              <span class="mono" style="font-size:.7rem">${p.items.filter(isDone).length}/${p.items.length} fasi · ${tot} voci</span>
+              ${p.deadline?`<span class="when ${complete?'':urg(n)}">${esc(fmtShort(p.deadline))} · ${esc(rel(n))}</span>`:''}
+            </div>
+            ${routeHTML(p)}
+          </div>
+          <div class="pct"><b>${pct}%</b><span>${complete?'atterrato':'in volo'}</span></div>
+        </div>
+        ${isOpen?`<div class="sbody">
+          ${p.items.map((x,i)=>nodeHTML(x,0,[i+1],i)).join('')}
+          <div class="addline"><input type="text" id="na-${id}" data-add="root" placeholder="Nuova fase, poi Invio" aria-label="Nuova fase"><button class="btn small ghost" data-act="add-root" type="button">+ Fase</button></div>
+          <div class="sfoot">
+            <label>Scadenza ${dateInput('d-'+id,'p-deadline',p.deadline)}</label>
+            <label>Priorità ${prioSelect('pp-'+id,'p-priority',p.priority)}</label>
+            <button class="icon" data-act="del-project" type="button" aria-label="Elimina progetto">${ICON.trash}</button>
+          </div>
+        </div>`:''}
+      </div>
+    </article>`;
+  }
+
+  function nodeHTML(x, depth, num, i){
+    const c=x.children, v=value(x), done=v===1, part=v>0&&v<1, isCol=collapsed.has(x.id);
+    const n=daysTo(x.deadline); const u = !done && x.deadline ? urg(n) : '';
+    let cnt=''; if(c.length){ let t=0,d=0; walk(c,k=>{ t++; if(isDone(k)) d++; }); cnt=`${d}/${t}`; }
+    return `<div class="node depth-${Math.min(depth,6)}" data-nid="${x.id}">
+      <div class="nrow ${done?'done-text':''}">
+        <button class="toggle ${c.length?'':'ghost'}" data-act="toggle-node" aria-expanded="${!isCol}" aria-label="Mostra le sottofasi" type="button" tabindex="${c.length?0:-1}">${ICON.chev}</button>
+        <input type="checkbox" class="check ${part?'part':''}" data-act="check" ${done?'checked':''} aria-label="Conclusa">
+        <div class="ntitle"><span class="num">${num.join('.')}</span><input class="inline" id="n-${x.id}" data-field="n-title" value="${esc(x.title)}" aria-label="Titolo">${u?`<span class="when ${u}">${esc(rel(n))}</span>`:''}</div>
+        <div class="nextra"><div class="nprio">${prioSelect('np-'+x.id,'n-priority',x.priority)}</div><div class="ndate">${dateInput('nd-'+x.id,'n-deadline',x.deadline)}</div></div>
+        <div class="ntools">
+          ${cnt?`<span class="count">${cnt}</span>`:''}
+          <button class="icon" data-act="up" type="button" aria-label="Sposta su" ${i===0?'disabled':''}>${ICON.up}</button>
+          <button class="icon" data-act="add-child" type="button" aria-label="Aggiungi sottofase">${ICON.plus}</button>
+          ${x.deadline?`<button class="icon" data-act="ics" type="button" aria-label="Aggiungi al calendario">${ICON.cal}</button>`:''}
+          <button class="icon" data-act="del-node" type="button" aria-label="Elimina">${ICON.trash}</button>
+        </div>
+      </div>
+      ${(c.length && !isCol) || adding.has(x.id) ? `<div class="children">
+        ${!isCol ? c.map((k,j)=>nodeHTML(k,depth+1,num.concat(j+1),j)).join('') : ''}
+        ${adding.has(x.id)?`<div class="addline"><input type="text" id="nc-${x.id}" data-add="child" placeholder="Nuova sottofase, poi Invio (Esc per chiudere)" aria-label="Nuova sottofase"></div>`:''}
+      </div>`:''}
+    </div>`;
+  }
+
+  /* ---------- eventi della lista ---------- */
+  function ctx(el){
+    const pe=el.closest('[data-pid]'); const pid=pe&&pe.dataset.pid; const p=pid&&projects[pid];
+    const ne=el.closest('[data-nid]'); const f=p&&ne?findNode(p,ne.dataset.nid):null;
+    return {pid,p,node:f&&f.n,sib:f&&f.sib};
+  }
+  function confirmClick(btn,label,fn){
+    if(btn.classList.contains('armed')){ fn(); return; }
+    const orig=btn.innerHTML; btn.classList.add('armed'); btn.textContent=label;
+    setTimeout(()=>{ if(btn.isConnected){ btn.classList.remove('armed'); btn.innerHTML=orig; } },3000);
+  }
+  const focusLater = id => requestAnimationFrame(()=>{ const el=document.getElementById(id); el&&el.focus(); });
+
+  listEl.addEventListener('click', e=>{
+    const b=e.target.closest('[data-act]'); if(!b) return;
+    const {pid,p,node,sib}=ctx(b); const act=b.dataset.act;
+    if(act==='toggle-proj'){ open.has(pid)?open.delete(pid):open.add(pid); saveUi(); render(true); return; }
+    if(act==='toggle-node'){ collapsed.has(node.id)?collapsed.delete(node.id):collapsed.add(node.id); saveUi(); render(true); return; }
+    if(act==='check'){ const v=b.checked; mutate(pid,()=>setAll(node,v)); return; }
+    if(act==='up'){ mutate(pid,()=>{ const i=sib.indexOf(node); if(i>0) [sib[i-1],sib[i]]=[sib[i],sib[i-1]]; }); return; }
+    if(act==='add-child'){ adding.add(node.id); collapsed.delete(node.id); saveUi(); render(true); focusLater('nc-'+node.id); return; }
+    if(act==='add-root'){ addRoot(pid); return; }
+    if(act==='ics'){ const path=[p.title]; walk(p.items,(n,pa)=>{ if(n.id===node.id) path.push(...pa.map(x=>x.title)); });
+      downloadICS([{id:node.id, d:node.deadline, t:node.title, path:path.join(' › ')}], `scadenza-${slug(node.title)}.ics`); return; }
+    if(act==='del-node'){ confirmClick(b, node.children.length?'Elimina tutto il ramo':'Elimina', ()=>mutate(pid,()=>{ sib.splice(sib.indexOf(node),1); })); return; }
+    if(act==='del-project'){ confirmClick(b,'Elimina progetto',()=>{ delete projects[pid]; open.delete(pid); saveUi(); save(); render(true); }); return; }
+  });
+
+  listEl.addEventListener('change', e=>{
+    const el=e.target, f=el.dataset.field; if(!f) return;
+    const {pid,node}=ctx(el); const v=el.value;
+    mutate(pid,p=>{
+      if(f==='p-title') p.title=v.trim()||p.title;
+      if(f==='p-category') p.category=v.trim();
+      if(f==='p-deadline') p.deadline=v;
+      if(f==='p-priority') p.priority=+v;
+      if(f==='n-title') node.title=v.trim()||node.title;
+      if(f==='n-deadline') node.deadline=v;
+      if(f==='n-priority') node.priority=+v;
+    });
+  });
+
+  listEl.addEventListener('keydown', e=>{
+    const el=e.target;
+    if(e.key==='Enter' && el.classList.contains('inline')){ e.preventDefault(); el.blur(); return; }
+    if(!el.dataset.add) return;
+    const {pid,node}=ctx(el);
+    if(e.key==='Escape' && el.dataset.add==='child'){ adding.delete(node.id); render(true); return; }
+    if(e.key!=='Enter') return;
+    e.preventDefault();
+    if(el.dataset.add==='root'){ addRoot(pid); return; }
+    const t=el.value.trim(); if(!t) return; el.value='';
+    mutate(pid,()=>{ node.children.push({id:uid(),title:t,done:false,deadline:'',priority:0,children:[]}); });
+    focusLater('nc-'+node.id);
+  });
+  listEl.addEventListener('focusout', ()=>setTimeout(()=>{ if(deferred) render(); },0));
+
+  function addRoot(pid){
+    const inp=document.getElementById('na-'+pid); const t=(inp&&inp.value||'').trim(); if(!t) return; inp.value='';
+    mutate(pid,p=>{ p.items.push({id:uid(),title:t,done:false,deadline:'',priority:0,children:[]}); });
+    focusLater('na-'+pid);
+  }
+
+  $('#newproj').addEventListener('submit', e=>{
+    e.preventDefault();
+    const t=$('#np-title').value.trim(); if(!t) return;
+    const id=uid(); const orders=Object.values(projects).map(p=>p.order||0);
+    projects[id]=normalize({title:t, category:$('#np-cat').value.trim(), priority:+$('#np-prio').value, items:[], order:(orders.length?Math.max(...orders):0)+1, createdAt:Date.now()});
+    open.add(id); saveUi(); save();
+    $('#np-title').value=''; $('#np-cat').value=''; $('#np-prio').value='0';
+    if(ui.filter==='completati') ui.filter='attivi';
+    render(true); focusLater('na-'+id);
+  });
+  $('#filters').addEventListener('click', e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.filter) ui.filter=b.dataset.filter;
+    if(b.dataset.cat!==undefined) ui.cat = ui.cat===b.dataset.cat ? '' : b.dataset.cat;
+    saveUi(); render(true);
+  });
+  $('#sort').addEventListener('change', e=>{ ui.sort=e.target.value; saveUi(); render(true); });
+  $('#expand-all').addEventListener('click',()=>{ Object.keys(projects).forEach(id=>open.add(id)); collapsed.clear(); saveUi(); render(true); });
+  $('#collapse-all').addEventListener('click',()=>{ open.clear(); saveUi(); render(true); });
+  $('#board-more').addEventListener('click',()=>{ boardAll=!boardAll; renderBoard(); });
+
+  /* ---------- file ---------- */
+  const stamp = () => new Date().toISOString().slice(0,10);
+  const slug = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40) || 'voce';
+  function download(name, text, type){
+    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+  }
+  const bstatus = t => { $('#backup-status').textContent=t; };
+
+  $('#exp-json').addEventListener('click',()=>{ download(`plancia-backup-${stamp()}.json`, JSON.stringify({app:'plancia', version:3, exported:new Date().toISOString(), projects}, null, 2), 'application/json'); bstatus('Backup scaricato.'); });
+  $('#exp-csv').addEventListener('click',()=>{
+    const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';
+    const lines=[['Codice','Progetto','Ambito','Numero','Livello','Voce','Priorità','Stato','Avanzamento %','Scadenza'].map(q).join(';')];
+    sortedProjects().forEach(([id,p])=>{
+      lines.push([codeOf(id),p.title,p.category,'','0',p.title,PRIO[p.priority],progress(p)===1&&p.items.length?'Completato':'In corso',Math.round(progress(p)*100),p.deadline].map(q).join(';'));
+      const rec=(nodes,num,depth)=>nodes.forEach((n,i)=>{ const nn=num.concat(i+1);
+        lines.push([codeOf(id),p.title,p.category,nn.join('.'),depth,'  '.repeat(depth-1)+n.title,PRIO[n.priority],isDone(n)?'Fatto':'Da fare',Math.round(value(n)*100),n.deadline].map(q).join(';'));
+        rec(n.children,nn,depth+1); });
+      rec(p.items,[],1);
+    });
+    download(`plancia-elenco-${stamp()}.csv`, '\ufeff'+lines.join('\r\n'), 'text/csv'); bstatus('Elenco per Excel scaricato.');
+  });
+  $('#imp-json').addEventListener('change', e=>{
+    const f=e.target.files&&e.target.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const obj=JSON.parse(r.result); const src=obj.projects||obj; let n=0;
+        // al primo import si tolgono gli esempi
+        Object.keys(projects).forEach(k=>{ if(projects[k].example) delete projects[k]; });
+        Object.entries(src).forEach(([id,p])=>{ if(p && typeof p==='object' && p.title){ const nid=projects[id]?uid():id; projects[nid]=normalize(p); n++; } });
+        save(); render(true); bstatus(n?`Importati ${n} progetti.`:'Il file non contiene progetti riconoscibili.');
+      }catch(err){ bstatus('Il file scelto non è un backup valido.'); }
+      e.target.value='';
+    };
+    r.readAsText(f);
+  });
+
+  /* ---------- calendario (.ics) ---------- */
+  function icsEsc(s){ return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n'); }
+  function icsDate(iso, add=0){ const d=new Date(iso+'T00:00:00'); d.setDate(d.getDate()+add); return d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0'); }
+  function trigger(lead){ return lead<=0 ? 'PT9H' : `-P${lead-1}DT15H`; }   // ore 9:00 del giorno scelto
+  function downloadICS(items, name){
+    const now=new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');
+    const ev=items.map(i=>['BEGIN:VEVENT',`UID:${i.id}@plancia-progetti`,`DTSTAMP:${now}`,`DTSTART;VALUE=DATE:${icsDate(i.d)}`,`DTEND;VALUE=DATE:${icsDate(i.d,1)}`,
+      `SUMMARY:${icsEsc('Scadenza: '+i.t)}`,`DESCRIPTION:${icsEsc(i.path)}`,'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${icsEsc(i.t)}`,`TRIGGER:${trigger(settings.lead)}`,'END:VALARM','END:VEVENT'].join('\r\n'));
+    download(name, ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Plancia Progetti//IT','CALSCALE:GREGORIAN',...ev,'END:VCALENDAR'].join('\r\n'), 'text/calendar');
+  }
+  $('#ics-all').addEventListener('click',()=>{
+    const items=deadlineList(); if(!items.length){ $('#notif-status').textContent='Non ci sono scadenze da esportare.'; return; }
+    downloadICS(items, `plancia-scadenze-${stamp()}.ics`);
+    $('#notif-status').textContent=`Esportate ${items.length} scadenze: apri il file per aggiungerle al calendario.`;
+  });
+
+  /* ---------- notifiche ---------- */
+  const canNotify = 'Notification' in window;
+  function notifStatus(){
+    const el=$('#notif-status'), btn=$('#notif-on');
+    if(!canNotify){ btn.hidden=true; el.textContent = /iphone|ipad/i.test(navigator.userAgent) ? 'Su iPhone le notifiche funzionano dopo aver aggiunto l’app alla schermata Home.' : 'Questo browser non supporta le notifiche: usa il calendario.'; return; }
+    if(Notification.permission==='granted' && settings.notif){ btn.textContent='Notifiche attive'; btn.classList.add('ghost'); el.textContent='Riceverai un avviso per ogni scadenza, una volta al giorno.'; }
+    else if(Notification.permission==='denied'){ btn.hidden=true; el.textContent='Le notifiche sono bloccate nelle impostazioni del browser per questo sito.'; }
+    else { btn.textContent='Attiva notifiche'; btn.classList.remove('ghost'); el.textContent=''; }
+  }
+  $('#notif-on').addEventListener('click', async ()=>{
+    if(!canNotify) return;
+    if(Notification.permission==='granted' && settings.notif){ settings.notif=false; store.set(SETKEY,settings); notifStatus(); $('#notif-status').textContent='Notifiche disattivate.'; return; }
+    const r = await Notification.requestPermission();
+    settings.notif = r==='granted'; store.set(SETKEY,settings); notifStatus();
+    if(settings.notif) checkDeadlines(true);
+  });
+  $('#lead').value=String(settings.lead);
+  $('#lead').addEventListener('change', e=>{ settings.lead=+e.target.value; store.set(SETKEY,settings); checkDeadlines(); });
+
+  async function notify(title, body, tag){
+    try{
+      const reg = 'serviceWorker' in navigator ? await navigator.serviceWorker.getRegistration() : null;
+      if(reg) await reg.showNotification(title,{body, tag, icon:'icons/icon-192.png', badge:'icons/icon-192.png'});
+      else new Notification(title,{body, tag, icon:'icons/icon-192.png'});
+    }catch(e){}
+  }
+  function checkDeadlines(){
+    if(!canNotify || Notification.permission!=='granted' || !settings.notif) return;
+    const day=new Date().toISOString().slice(0,10);
+    const sent=store.get(NOTIFKEY,{}); Object.keys(sent).forEach(k=>{ if(!k.endsWith(day)) delete sent[k]; });
+    const due=deadlineList().filter(i=>{ const n=daysTo(i.d); return n<=settings.lead && !sent[i.id+'|'+day]; });
+    if(!due.length) return;
+    if(due.length>3){
+      const late=due.filter(i=>daysTo(i.d)<0).length;
+      notify(`${due.length} scadenze da guardare`, (late?`${late} in ritardo. `:'')+due.slice(0,3).map(i=>i.t).join(', ')+'…', 'plancia-riepilogo');
+    } else due.forEach(i=>notify(`Scadenza ${rel(daysTo(i.d))}: ${i.t}`, i.path, 'plancia-'+i.id));
+    due.forEach(i=>sent[i.id+'|'+day]=1); store.set(NOTIFKEY,sent);
+  }
+
+  /* ---------- installazione e offline ---------- */
+  let installEvt=null;
+  window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); installEvt=e; $('#install').hidden=false; });
+  $('#install').addEventListener('click', async ()=>{ if(!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt=null; $('#install').hidden=true; });
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if(/iphone|ipad/i.test(navigator.userAgent) && !standalone && !store.get('plancia-ios-tip',false)){
+    showNotice('Per installare l’app su iPhone: tocca Condividi e poi “Aggiungi alla schermata Home”.'); store.set('plancia-ios-tip',true);
+  }
+  if('serviceWorker' in navigator && location.protocol!=='file:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+  if(navigator.storage && navigator.storage.persist){ navigator.storage.persist().catch(()=>{}); }
+
+  if(firstRun){ save(); Object.keys(projects).forEach(id=>open.add(id)); saveUi(); }
+  render(true); notifStatus(); checkDeadlines();
+  document.addEventListener('visibilitychange', ()=>{ if(!document.hidden){ render(); checkDeadlines(); } });
+  setInterval(()=>{ renderBoard(); checkDeadlines(); }, 60*1000);
+  window.addEventListener('storage', e=>{ if(e.key===KEY){ projects=store.get(KEY,{}); Object.keys(projects).forEach(k=>projects[k]=normalize(projects[k])); render(); } });
+})();
+</script>
+</body>
+</html>
