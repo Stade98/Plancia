@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // L'autore: sostituisci l'email qui sotto con la tua (tutta in minuscolo).
+    function autore() {
+      return request.auth != null && request.auth.token.email == "LA-TUA-EMAIL";
+    }
+    // Chi riceve una condivisione deve aver confermato la propria email.
+    function ospite() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    // I tuoi progetti: solo tu.
+    match /utenti/{uid} {
+      allow read, write: if autore() && request.auth.uid == uid;
+    }
+
+    // I rami condivisi: tu li crei e li gestisci; gli invitati vedono solo i propri,
+    // e chi può modificare cambia soltanto le voci, non i permessi.
+    match /condivisi/{sid} {
+      allow read: if autore()
+        || (ospite() && (request.auth.token.email in resource.data.editors
+                         || request.auth.token.email in resource.data.readers));
+      allow create, delete: if autore();
+      allow update: if autore()
+        || (ospite() && request.auth.token.email in resource.data.editors
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['nodes', 'deletedNodes', 'updatedAt', 'log']));
+    }
+
+    // Gli inviti: ognuno legge solo il proprio, solo tu li scrivi.
+    match /inviti/{email} {
+      allow read: if autore() || (ospite() && request.auth.token.email == email);
+      allow write: if autore();
+    }
+  }
+}
