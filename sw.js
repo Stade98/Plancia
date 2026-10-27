@@ -1,15 +1,18 @@
 // Plancia Progetti: funzionamento senza connessione.
 // Quando modifichi i file dell'app, aumenta il numero di versione qui sotto.
-const VERSIONE = 'plancia-v1';
+const VERSIONE = 'plancia-v2';
 const FILE_APP = [
   './',
   './index.html',
+  './config.js',
+  './sync.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable-512.png',
   './icons/apple-touch-icon.png'
 ];
+const ESTERNI = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.gstatic.com'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(VERSIONE).then(c => c.addAll(FILE_APP)).then(() => self.skipWaiting()));
@@ -28,17 +31,19 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  // Pagina: prima la rete (per ricevere gli aggiornamenti), altrimenti la copia salvata.
-  if (req.mode === 'navigate') {
+  // File dell'app: prima la rete (così gli aggiornamenti arrivano subito), altrimenti la copia salvata.
+  if (url.origin === location.origin) {
     event.respondWith(
-      fetch(req).then(res => { const copy = res.clone(); caches.open(VERSIONE).then(c => c.put('./index.html', copy)); return res; })
-        .catch(() => caches.match('./index.html'))
+      fetch(req).then(res => {
+        if (res && res.ok) { const copy = res.clone(); caches.open(VERSIONE).then(c => c.put(req.mode === 'navigate' ? './index.html' : req, copy)); }
+        return res;
+      }).catch(() => caches.match(req.mode === 'navigate' ? './index.html' : req, { ignoreSearch: true }))
     );
     return;
   }
 
-  // Caratteri tipografici e file dell'app: copia salvata, aggiornata in background.
-  if (url.origin === location.origin || url.host === 'fonts.googleapis.com' || url.host === 'fonts.gstatic.com') {
+  // Caratteri tipografici e librerie di Firebase: copia salvata, aggiornata in background.
+  if (ESTERNI.includes(url.host)) {
     event.respondWith(
       caches.match(req).then(cached => {
         const net = fetch(req).then(res => {
@@ -49,6 +54,7 @@ self.addEventListener('fetch', event => {
       })
     );
   }
+  // Tutto il resto (comprese le chiamate a Firebase) passa direttamente in rete.
 });
 
 // Un tocco sulla notifica apre (o riporta in primo piano) l'app.
