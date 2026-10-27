@@ -1,12 +1,13 @@
 // Plancia Progetti: funzionamento senza connessione.
 // Quando modifichi i file dell'app, aumenta il numero di versione qui sotto.
-const VERSIONE = 'plancia-v7';
+const VERSIONE = 'plancia-v10';
 const FILE_APP = [
   './',
   './index.html',
   './config.js',
   './sync.js',
   './modello.js',
+  './icone.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

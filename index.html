@@ -46,21 +46,45 @@ button,input,select,textarea{font:inherit;color:inherit}
 .mono{font-family:var(--f-data);font-variant-numeric:tabular-nums}
 svg.i{width:14px;height:14px;flex:0 0 auto}
 
-/* apertura */
-.splash{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;transition:opacity .45s ease, visibility .45s;animation:sp-out .45s 2.2s forwards}
+/* apertura: Road to ministry */
+.splash{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center;transition:opacity .5s ease, visibility .5s;animation:sp-out .5s 3.4s forwards}
 .splash.gone{opacity:0;visibility:hidden}
-.splash-in{display:flex;flex-direction:column;align-items:center;gap:14px}
-.splash svg{width:84px;height:84px}
-.splash .card-s{transform-origin:50% 50%;animation:sp-card .55s cubic-bezier(.2,.9,.3,1.2) both}
-.splash .band-s{transform-origin:left center;animation:sp-band .4s .25s ease-out both}
-.splash .tick-s{stroke-dasharray:24;stroke-dashoffset:24;animation:sp-tick .45s .5s ease-out forwards}
-.splash .word{font-weight:800;font-stretch:120%;font-size:1.6rem;color:var(--ink);animation:sp-word .5s .55s ease-out both}
-@keyframes sp-card{from{opacity:0;transform:scale(.6) rotate(-8deg)}to{opacity:1;transform:none}}
-@keyframes sp-band{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes sp-tick{to{stroke-dashoffset:0}}
-@keyframes sp-word{from{opacity:0;transform:translateY(8px);letter-spacing:.3em}to{opacity:1;transform:none}}
+.splash-in{display:flex;flex-direction:column;align-items:center;gap:16px;transition:transform .5s ease}
+.splash.gone .splash-in{transform:scale(1.06)}
+.rtm{width:132px;height:132px;overflow:visible}
+.rtm .s-bg{transform-origin:60px 60px;animation:r-pop .6s cubic-bezier(.2,.9,.3,1.25) both}
+.rtm .s-ring{transform-origin:60px 60px;opacity:0;animation:r-ring 1.6s 1.9s ease-out both}
+.rtm .s-sun{transform-origin:60px 60px;opacity:0;animation:r-sun 1.2s .5s ease-out forwards, r-glow 2.6s 1.7s ease-in-out infinite}
+.rtm .s-ground,.rtm .s-asphalt{opacity:0;animation:r-fade .5s .35s ease-out forwards}
+.rtm .s-horizon{stroke-dasharray:110;stroke-dashoffset:110;animation:r-draw .6s .4s ease-out forwards}
+.rtm .s-edge{stroke-dasharray:70;stroke-dashoffset:70;animation:r-draw .7s .55s cubic-bezier(.4,0,.2,1) forwards}
+.rtm .s-edge.r{animation-delay:.65s}
+.rtm .s-center{opacity:0;animation:r-fade .3s 1s forwards, r-run .9s 1s linear infinite}
+.rtm .s-step{transform-box:fill-box;transform-origin:center bottom;transform:scaleX(0);animation:r-grow-x .35s 1.05s ease-out forwards}
+.rtm .s-col{transform-box:fill-box;transform-origin:center bottom;transform:scaleY(0);animation:r-grow-y .35s ease-out forwards}
+.rtm .c1{animation-delay:1.25s}.rtm .c2{animation-delay:1.33s}.rtm .c3{animation-delay:1.41s}.rtm .c4{animation-delay:1.49s}
+.rtm .s-ped{transform-box:fill-box;transform-origin:center bottom;opacity:0;animation:r-ped .45s 1.6s cubic-bezier(.2,.9,.3,1.3) forwards}
+.rtm .s-pole{stroke-dasharray:12;stroke-dashoffset:12;animation:r-draw .3s 1.9s ease-out forwards}
+.rtm .s-flag{transform-box:fill-box;transform-origin:left center;transform:scale(0);animation:r-flag .4s 2.1s cubic-bezier(.2,.9,.3,1.5) forwards, r-wave 1.4s 2.5s ease-in-out infinite}
+.splash .word{font-weight:800;font-stretch:118%;font-size:1.55rem;color:var(--ink);letter-spacing:.01em;display:flex}
+.splash .word span{display:inline-block;opacity:0;transform:translateY(10px);animation:r-letter .45s cubic-bezier(.2,.9,.3,1.2) forwards;animation-delay:calc(1.3s + var(--d) * 45ms)}
+.splash .underline{height:2px;width:0;background:var(--accent);border-radius:2px;animation:r-line .7s 2.1s ease-out forwards}
+@keyframes r-pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes r-ring{0%{opacity:.8;transform:scale(1)}100%{opacity:0;transform:scale(1.35)}}
+@keyframes r-sun{from{opacity:0;transform:translateY(14px)}to{opacity:.55;transform:none}}
+@keyframes r-glow{50%{opacity:.8}}
+@keyframes r-fade{to{opacity:1}}
+@keyframes r-draw{to{stroke-dashoffset:0}}
+@keyframes r-run{from{stroke-dashoffset:0}to{stroke-dashoffset:13}}
+@keyframes r-grow-x{to{transform:scaleX(1)}}
+@keyframes r-grow-y{to{transform:scaleY(1)}}
+@keyframes r-ped{from{opacity:0;transform:translateY(-6px) scale(.6)}to{opacity:1;transform:none}}
+@keyframes r-flag{to{transform:scale(1)}}
+@keyframes r-wave{0%,100%{transform:skewY(0) scaleX(1)}50%{transform:skewY(-8deg) scaleX(.9)}}
+@keyframes r-letter{to{opacity:1;transform:none}}
+@keyframes r-line{to{width:150px}}
 @keyframes sp-out{to{opacity:0;visibility:hidden;pointer-events:none}}
-.intro .bproj,.intro .card{animation:rise .5s cubic-bezier(.2,.9,.3,1.1) both;animation-delay:calc(var(--i,0) * 55ms + 80ms)}
+.intro .bproj,.intro .card,.intro .bgroup{animation:rise .5s cubic-bezier(.2,.9,.3,1.1) both;animation-delay:calc(var(--i,0) * 55ms + 2.9s)}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* testata */
@@ -116,18 +140,29 @@ h1{margin:0;font-weight:800;font-stretch:115%;font-size:1.45rem;letter-spacing:-
 .bsum{font-family:var(--f-data);font-size:.68rem;color:var(--board-dim)}
 .bsum b{color:var(--board-fg);font-weight:500}
 .bsum .r{color:#ffb4ad}
-.bgroup{border-top:1px solid var(--board-line);padding-bottom:4px}
+.boardwrap{display:flex;flex-direction:column;gap:8px}
+.bsumline{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:0 4px}
+.bsumline h2{margin:0;font-family:var(--f-data);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.bsumline .bsum{color:var(--muted)} .bsumline .bsum b{color:var(--ink)} .bsumline .bsum .r{color:var(--red)}
+.boards{display:flex;flex-direction:column;gap:12px}
+.bgroup{padding:2px 0 6px;box-shadow:0 1px 0 rgba(0,0,0,.03), 0 8px 22px -16px rgba(30,35,45,.45)}
+.bh-r{display:inline-flex;align-items:center;gap:8px}
+.bsort{background:var(--board-2);border:1px solid var(--board-line);color:var(--board-dim);border-radius:999px;font-family:var(--f-data);font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;cursor:pointer}
+.bsort:hover{color:var(--board-fg)}
+.bgrip{color:var(--board-dim);height:20px;width:14px}
+.bgrip:hover{background:var(--board-line)}
+.bproj{outline-offset:-2px}
 .bgroup h3{margin:0;padding:10px 16px 2px;font-family:var(--f-data);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--board-dim);font-weight:500;display:flex;justify-content:space-between;align-items:center}
 .bgroup h3 span{display:inline-flex;align-items:center;gap:6px}
 .bgroup h3 svg{width:13px;height:13px}
 .bproj{display:block;width:100%;text-align:left;background:none;border:0;padding:7px 16px 8px;cursor:pointer;color:inherit}
 .bproj:hover{background:var(--board-2)}
-.bline{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:3px 10px;align-items:center}
+.bline{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;gap:3px 8px;align-items:center}
 .bname{min-width:0;font-weight:600;font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px}
 .bname svg{width:12px;height:12px;color:var(--board-dim);flex:0 0 auto}
-.bbar{grid-column:2 / 5;height:2px;border-radius:2px;background:var(--board-line);overflow:hidden}
+.bbar{grid-column:3 / 6;height:2px;border-radius:2px;background:var(--board-line);overflow:hidden}
 .bbar i{display:block;height:100%;background:var(--led);width:var(--from,0%);transition:width 1s cubic-bezier(.4,.1,.2,1)}
-.bnext{grid-column:2 / 5;font-size:.8rem;color:var(--board-dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bnext{grid-column:3 / 6;font-size:.8rem;color:var(--board-dim);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bnext b{color:var(--board-fg);font-weight:500}
 .bnext.red,.bnext.red b{color:#ffc2bc}
 .alert{font-family:var(--f-data);font-size:.6rem;font-weight:600;background:#7a3a36;color:#ffe1dd;border-radius:999px;padding:1px 7px}
@@ -321,12 +356,26 @@ dialog::backdrop{background:rgba(20,22,28,.4)}
 .tpl-list{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
 .tpl-list li{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.88rem;border:1px solid var(--line);border-radius:10px;padding:6px 6px 6px 12px}
 .catrow{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:8px}
-.catrow b{font-size:.86rem}
+.catrow b{font-size:.86rem;display:flex;align-items:center;gap:6px}
+.catrow b svg{width:15px;height:15px;color:var(--accent)}
+.iconpick button.txt{width:auto;padding:0 10px;font-size:.74rem}
+.iconbox{padding:0 10px 10px 50px;animation:drop .2s ease-out}
+@media (max-width:600px){.iconbox{padding-left:10px}}
+.trow{display:flex;align-items:flex-start;gap:6px;min-width:0}
+.trow textarea,.trow .ptitle{flex:1;min-width:0}
+.picon{flex:0 0 auto;display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:var(--accent-soft);color:var(--accent);margin-top:1px}
+.picon svg{width:15px;height:15px}
 .iconpick{display:flex;flex-wrap:wrap;gap:4px}
 .iconpick button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--muted)}
 .iconpick button svg{width:16px;height:16px}
 .iconpick button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 .notice{font-size:.86rem;background:var(--accent-soft);color:var(--ink);padding:10px 12px;border-radius:12px}
+
+/* messa a fuoco: il resto dello schermo si scurisce */
+.dim{position:fixed;inset:0;z-index:55;background:rgba(18,21,28,.5);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);animation:dimin .3s ease-out;cursor:pointer}
+.card.spot{position:relative;z-index:60;box-shadow:0 24px 60px -18px rgba(0,0,0,.55);animation:spotin .35s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes dimin{from{opacity:0}to{opacity:1}}
+@keyframes spotin{from{transform:scale(.985)}to{transform:none}}
 
 /* notifiche a scena */
 .toasts{position:fixed;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 max(14px, env(safe-area-inset-left,0px)) calc(16px + env(safe-area-inset-bottom,0px));pointer-events:none;z-index:90}
@@ -381,7 +430,7 @@ h1{font-size:1.25rem}
 .board{border-radius:14px}
 .bhead{padding:10px 12px 6px}
 .bgroup h3{padding:8px 12px 2px}
-.bproj{padding:6px 12px 7px}
+.bproj{padding:6px 12px 7px 6px}
 .bname{font-size:.9rem}
 .bnext{font-size:.76rem}
 .add{gap:6px}
@@ -441,7 +490,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   .children>.addline{margin-left:24px}
   .actions,.card>.actions{padding-left:10px;padding-right:6px}
   .sharebox{margin-left:10px}
-  .bproj{padding:6px 10px 7px}
+  .bproj{padding:6px 10px 7px 4px}
   .bhead,.bgroup h3{padding-left:10px;padding-right:10px}
   .flap{font-size:.66rem}
   .day small{font-size:.56rem;letter-spacing:.04em}
@@ -454,15 +503,46 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
 <body>
 <div class="splash" id="splash" aria-hidden="true">
   <div class="splash-in">
-    <svg viewBox="0 0 48 48"><g class="card-s"><rect width="48" height="48" rx="11" fill="#3a4150"/><rect x="9" y="13" width="30" height="22" rx="3" fill="#fffdf9"/><rect class="band-s" x="9" y="13" width="6" height="22" rx="2" fill="#b4342b"/><path class="tick-s" d="M20 24.5l4 4 8-9" fill="none" stroke="#46608c" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
-    <div class="word">Plancia</div>
+    <svg class="rtm" viewBox="0 0 120 120">
+      <defs><clipPath id="rtm-clip"><circle cx="60" cy="60" r="54"/></clipPath></defs>
+      <circle class="s-bg" cx="60" cy="60" r="56" fill="#3a4150"/>
+      <g clip-path="url(#rtm-clip)">
+        <circle class="s-sun" cx="60" cy="50" r="17" fill="#93a9cf"/>
+        <rect class="s-ground" x="0" y="60" width="120" height="60" fill="#323846"/>
+        <path class="s-horizon" d="M8 60H112" stroke="#93a9cf" stroke-width="1.2"/>
+        <path class="s-asphalt" d="M26 120L56.5 60h7L94 120z" fill="#262b35"/>
+        <path class="s-edge" d="M26 120L56.5 60" stroke="#fffdf9" stroke-width="2.2" stroke-linecap="round"/>
+        <path class="s-edge r" d="M94 120L63.5 60" stroke="#fffdf9" stroke-width="2.2" stroke-linecap="round"/>
+        <path class="s-center" d="M60 118V62" stroke="#e2e8f2" stroke-width="2.4" stroke-dasharray="6 7"/>
+        <g class="s-building">
+          <rect class="s-step" x="44" y="56" width="32" height="4" rx=".6" fill="#fffdf9"/>
+          <rect class="s-col c1" x="47" y="43" width="3.6" height="13" fill="#fffdf9"/>
+          <rect class="s-col c2" x="53.4" y="43" width="3.6" height="13" fill="#fffdf9"/>
+          <rect class="s-col c3" x="63" y="43" width="3.6" height="13" fill="#fffdf9"/>
+          <rect class="s-col c4" x="69.4" y="43" width="3.6" height="13" fill="#fffdf9"/>
+          <path class="s-ped" d="M43 43L60 33l17 10z" fill="#fffdf9"/>
+          <path class="s-pole" d="M60 33V22" stroke="#fffdf9" stroke-width="1.4" stroke-linecap="round"/>
+          <path class="s-flag" d="M60 22.5c3-1.4 5 1.2 8 0v5c-3 1.2-5-1.4-8 0z" fill="#b4342b"/>
+        </g>
+      </g>
+      <circle class="s-ring" cx="60" cy="60" r="56" fill="none" stroke="#93a9cf" stroke-width="1.5"/>
+    </svg>
+    <div class="word" aria-label="Road to ministry"><span style="--d:0">R</span><span style="--d:1">o</span><span style="--d:2">a</span><span style="--d:3">d</span><span style="--d:4">&nbsp;</span><span style="--d:5">t</span><span style="--d:6">o</span><span style="--d:7">&nbsp;</span><span style="--d:8">m</span><span style="--d:9">i</span><span style="--d:10">n</span><span style="--d:11">i</span><span style="--d:12">s</span><span style="--d:13">t</span><span style="--d:14">r</span><span style="--d:15">y</span></div>
+    <div class="underline"></div>
   </div>
 </div>
 
 <div class="wrap" id="app">
   <header class="top">
     <div class="brand">
-      <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="#3a4150"/><rect x="9" y="13" width="30" height="22" rx="3" fill="#fffdf9"/><rect x="9" y="13" width="6" height="22" rx="2" fill="#b4342b"/><path d="M20 24.5l4 4 8-9" fill="none" stroke="#46608c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 120 120" aria-hidden="true"><g transform="translate(60 60) scale(1.0) translate(-60 -60)"><clipPath id="hdr-clip"><circle cx="60" cy="60" r="54"/></clipPath>
+    <circle cx="60" cy="60" r="56" fill="#3a4150"/>
+    <g clip-path="url(#hdr-clip)"><circle cx="60" cy="50" r="17" fill="#93a9cf" opacity=".55"/><rect x="-100" y="60" width="320" height="200" fill="#323846"/>
+    <path d="M-40 60H160" stroke="#93a9cf" stroke-width="1.2"/><path d="M26 120L56.5 60h7L94 120z" fill="#262b35"/>
+    <path d="M26 120L56.5 60M94 120L63.5 60" stroke="#fffdf9" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M60 118V62" stroke="#e2e8f2" stroke-width="2.4" stroke-dasharray="6 7"/>
+    <rect x="44" y="56" width="32" height="4" rx=".6" fill="#fffdf9"/><rect x="47" y="43" width="3.6" height="13" fill="#fffdf9"/><rect x="53.4" y="43" width="3.6" height="13" fill="#fffdf9"/><rect x="63" y="43" width="3.6" height="13" fill="#fffdf9"/><rect x="69.4" y="43" width="3.6" height="13" fill="#fffdf9"/>
+    <path d="M43 43L60 33l17 10z" fill="#fffdf9"/><path d="M60 33V22" stroke="#fffdf9" stroke-width="1.4" stroke-linecap="round"/><path d="M60 22.5c3-1.4 5 1.2 8 0v5c-3 1.2-5-1.4-8 0z" fill="#b4342b"/></g></g></svg>
       <div style="min-width:0"><h1>Plancia</h1><div class="hello" id="hello"></div></div>
     </div>
     <div class="top-right">
@@ -489,9 +569,9 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     <div id="weekly"></div>
     <div class="inbox" id="inbox"></div>
 
-    <section class="board" aria-label="Tabellone" id="board-wrap">
-      <div class="bhead"><h2>Tabellone</h2><span class="bsum" id="bsum"></span></div>
-      <div id="board"></div>
+    <section aria-label="Tabellone" id="board-wrap" class="boardwrap">
+      <div class="bsumline"><h2>Tabellone</h2><span class="bsum" id="bsum"></span></div>
+      <div id="board" class="boards"></div>
     </section>
 
     <form class="add" id="newproj" autocomplete="off">
@@ -564,7 +644,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
 
     <div class="panel">
       <h3>Ambiti</h3>
-      <p>Scegli un'icona per ogni ambito.</p>
+      <p>L'icona si sceglie da sola in base al nome dell'ambito. Puoi cambiarla qui; quella dei singoli progetti si cambia dal loro menu ⋯.</p>
       <div id="cat-icons"></div>
     </div>
 
@@ -606,10 +686,12 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   </div>
 </dialog>
 
+<div class="dim" id="dim" hidden></div>
 <div class="toasts" id="toasts" aria-live="polite"></div>
 <canvas class="confetti" id="confetti" hidden></canvas>
 
 <script src="modello.js"></script>
+<script src="icone.js"></script>
 <script>
 (function(){
   'use strict';
@@ -647,22 +729,20 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     target:sv('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>'),
     inbox:sv('<path d="M4 13l3-8h10l3 8v6H4z"/><path d="M4 13h5l1 2h4l1-2h5"/>'), x:sv('<path d="M6 6l12 12M18 6L6 18"/>')
   };
-  // icone per gli ambiti
-  const CAT_ICONS = {
-    steto:'<path d="M6 3v6a4 4 0 0 0 8 0V3"/><path d="M10 13v3a5 5 0 0 0 10 0v-2"/><circle cx="20" cy="12" r="2"/>',
-    laurea:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5M22 9v6"/>',
-    libro:'<path d="M4 4h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z"/><path d="M20 4h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7z"/>',
-    micro:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
-    cartella:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2M3 12h18"/>',
-    persone:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/>',
-    cuore:'<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
-    provetta:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M7 15h10"/>',
-    croce:'<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
-    grafico:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
-    matita:'<path d="M4 20l4-1L19 8l-3-3L5 16z"/><path d="M14 7l3 3"/>',
-    calendario:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>'
-  };
-  const catIcon = c => { const k=(prefs.catIcons||{})[String(c||'').trim()]; return k && CAT_ICONS[k] ? sv(CAT_ICONS[k]) : ''; };
+  // icone: scelte in automatico dalle parole del nome (icone.js), modificabili a mano
+  const IC = window.PlanciaIcone;
+  const iconSvg = k => k && IC.byKey[k] ? sv(IC.byKey[k].d) : '';
+  const catKey = c => { c=String(c||'').trim(); if(!c) return ''; const m=(prefs.catIcons||{})[c]; if(m==='none') return ''; return m || IC.guess(c); };
+  const catIcon = c => iconSvg(catKey(c));
+  const projKey = p => p.icon==='none' ? '' : (p.icon || IC.guess(p.title) || catKey(p.category));
+  const projIcon = p => iconSvg(projKey(p));
+  function iconPicker(attr, cur){
+    return `<div class="iconpick">
+      <button type="button" ${attr} data-icon="" aria-pressed="${!cur}" title="Automatica" class="txt">Auto</button>
+      <button type="button" ${attr} data-icon="none" aria-pressed="${cur==='none'}" title="Nessuna" class="txt">Nessuna</button>
+      ${IC.SET.map(([k,label,d])=>`<button type="button" ${attr} data-icon="${k}" aria-pressed="${cur===k}" title="${esc(label)}" aria-label="${esc(label)}">${sv(d)}</button>`).join('')}
+    </div>`;
+  }
 
   /* ---------- dati ---------- */
   let projects = store.get(KEY, null);
@@ -670,13 +750,15 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   if(firstRun) projects = sampleData();
   Object.keys(projects).forEach(k=>projects[k]=M.normalize(projects[k]));
   let deleted = store.get('plancia-eliminati', {});
-  let prefs = Object.assign({catIcons:{}, u:0}, store.get('plancia-prefs', {}));
+  let prefs = Object.assign({catIcons:{}, manualGroups:{}, u:0}, store.get('plancia-prefs', {}));
   let guest = store.get(GKEY, {});        // rami condivisi con me: {sid: {meta, p}}
   Object.values(guest).forEach(g=>{ g.p.items=(g.p.items||[]).map(n=>M.normalizeNode(n)); g.p.deletedNodes=g.p.deletedNodes||{}; });
   const ui = Object.assign({open:[], collapsed:[], cat:'', tab:'board', doneOpen:[], archiveOpen:false, weeklySeen:''}, store.get(UIKEY, {}));
   const open=new Set(ui.open), collapsed=new Set(ui.collapsed), doneOpen=new Set(ui.doneOpen);
   const settings = Object.assign({lead:1, notif:false, name:'', theme:'auto', focusMin:25}, store.get(SETKEY, {}));
+  const iconOpen=new Set();
   const actionsOpen=new Set(), noteOpen=new Set(), editOpen={}, adding=new Set(), shareOpen=new Set();
+  let suppressClick=0, spot=null;
   let pushHook=null, query='', selectedDay=null, syncUser=null, showWeekly=false, drag=null;
 
   function saveUi(){ store.set(UIKEY, {open:[...open], collapsed:[...collapsed], cat:ui.cat, tab:ui.tab, doneOpen:[...doneOpen], archiveOpen:ui.archiveOpen, weeklySeen:ui.weeklySeen}); }
@@ -770,7 +852,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     walk(p.items,(n,path,d,i)=>{ m[n.id]=JSON.stringify([n.title,n.status,n.deadline,n.time,n.priority,n.note,n.link,n.assignee,n.repeat,n.share||null,path.length?path[path.length-1].id:'r',i]); });
     return m;
   }
-  const metaSig = p => JSON.stringify([p.title,p.category,p.priority,p.deadline,p.note,p.archived,p.template,p.pinned,p.order]);
+  const metaSig = p => JSON.stringify([p.title,p.category,p.priority,p.deadline,p.note,p.archived,p.template,p.pinned,p.order,p.icon]);
   const fx={pop:new Set(), celebrate:null, enter:null};
   function track(p, fn){
     const before=sigs(p), bm=metaSig(p), now=Date.now();
@@ -839,6 +921,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     deferred=false;
     const focusId = ae && ae.id && inLists(ae) ? ae.id : null;
     const drafts={}; document.querySelectorAll('[data-add]').forEach(i=>{ if(i.value) drafts[i.id]=i.value; });
+    $('#dim').hidden = !spot || !!query || ui.tab!=='board' || (spot.startsWith('g:') ? !guest[spot.slice(2)] : !projects[spot]);
     renderHello(); renderTabs(); renderWeekly(); renderInbox(); renderBoard(); renderFilters(); renderList(); renderShared(); renderArchive(); renderOggi(); renderSettingsLists();
     Object.entries(drafts).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.value=v; });
     document.querySelectorAll('textarea.inline').forEach(autosize);
@@ -911,6 +994,20 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     return `<span class="bnext ${s<=1?'red':''}">${lab}: <b>${esc(n.title)}</b>${esc(when)}</span>`;
   }
   function alerts(p){ let a=0; walk(p.items,n=>{ if(!isDone(n) && !n.children.length && (n.priority || (n.deadline && daysTo(n.deadline)<0))) a++; }); if(p.priority && projStatus(p)!=='done') a=Math.max(a,1); return a; }
+  // prima scadenza ancora aperta del progetto (sua o di una sua voce)
+  function nextDue(p){
+    let best='';
+    const add=(d,t)=>{ if(!d) return; const k=d+' '+(t||'99:99'); if(!best || k<best) best=k; };
+    if(projStatus(p)!=='done') add(p.deadline,'');
+    walk(p.items,n=>{ if(!isDone(n)) add(n.deadline,n.time); });
+    return best;
+  }
+  const manual = c => !!((prefs.manualGroups||{})[c]);
+  function groupSort(rows, c){
+    if(manual(c)) return rows.slice().sort(byOrder);
+    return rows.slice().sort((a,b)=>{ const x=nextDue(a[1]), y=nextDue(b[1]);
+      return (b[1].pinned-a[1].pinned) || ((x?0:1)-(y?0:1)) || x.localeCompare(y) || (a[1].order||0)-(b[1].order||0); });
+  }
   function renderBoard(){
     const entries=ownActive().sort(byOrder);
     let act=0, urg=0, late=0;
@@ -918,28 +1015,29 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     $('#bsum').innerHTML = `<b>${act}</b> ${act===1?'attivo':'attivi'}${urg?` · <b class="r">${urg}</b> ${urg===1?'urgente':'urgenti'}`:''}${late?` · <b class="r">${late}</b> in ritardo`:''}`;
     $('#board-wrap').hidden = !!query;
     const gs=Object.entries(guest);
-    if(!entries.length && !gs.length){ boardEl.innerHTML='<div class="bempty">Nessun progetto. Aggiungine uno qui sotto.</div>'; return; }
+    if(!entries.length && !gs.length){ boardEl.innerHTML='<div class="board bgroup"><div class="bempty">Nessun progetto. Aggiungine uno qui sotto.</div></div>'; return; }
     const groups={};
     entries.forEach(e=>{ const c=e[1].category.trim()||'Senza ambito'; (groups[c]=groups[c]||[]).push(e); });
     const names=Object.keys(groups).sort((a,b)=> (a==='Senza ambito')-(b==='Senza ambito') || a.localeCompare(b,'it'));
-    let i=0;
+    let i=0, gi=0;
     boardEl.innerHTML = names.map(c=>{
-      const rows=groups[c], live=rows.filter(([,p])=>projStatus(p)!=='done'), done=rows.filter(([,p])=>projStatus(p)==='done'), showDone=doneOpen.has(c);
-      return `<div class="bgroup"><h3><span>${catIcon(c)}${esc(c)}</span><span>${live.length} ${live.length===1?'attivo':'attivi'}</span></h3>
+      const rows=groupSort(groups[c], c), live=rows.filter(([,p])=>projStatus(p)!=='done'), done=rows.filter(([,p])=>projStatus(p)==='done'), showDone=doneOpen.has(c);
+      return `<div class="board bgroup" data-cat="${esc(c)}" style="--i:${gi++}"><h3><span>${catIcon(c)}${esc(c)}</span>
+          <span class="bh-r">${live.length} ${live.length===1?'attivo':'attivi'}${live.length>1?`<button type="button" class="bsort" data-sort-group="${esc(c)}" title="Cambia ordine">${manual(c)?'ordine personale':'per scadenza'}</button>`:''}</span></h3>
         ${live.map(([id,p])=>boardRow(id,p,i++)).join('')}
         ${done.length?`<button type="button" class="bdone" data-done-group="${esc(c)}">${stateIcon('done',true)} ${done.length} ${done.length===1?'completato':'completati'} ${showDone?'· nascondi':'· mostra'}</button>`:''}
         ${showDone?done.map(([id,p])=>boardRow(id,p,i++)).join(''):''}
       </div>`;
-    }).join('') + (gs.length?`<div class="bgroup"><h3><span>${I.users}Condivisi con me</span><span>${gs.length}</span></h3>${gs.map(([sid,g])=>boardRow('g:'+sid, g.p, i++, g.meta.projTitle+' › '+(g.p.items[0]?g.p.items[0].title:''))).join('')}</div>`:'');
+    }).join('') + (gs.length?`<div class="board bgroup" style="--i:${gi}"><h3><span>${I.users}Condivisi con me</span><span>${gs.length}</span></h3>${gs.map(([sid,g])=>boardRow('g:'+sid, g.p, i++, g.meta.projTitle+' › '+(g.p.items[0]?g.p.items[0].title:''))).join('')}</div>`:'');
     firstBoard=false; spinFlaps();
   }
   function boardRow(id,p,i,label){
     const st=projStatus(p), pct=Math.round(progress(p)*100), a=st==='done'?0:alerts(p);
-    return `<button type="button" class="bproj ${st}" data-goto="${esc(id)}" style="--i:${i}">
-      <span class="bline">${stateIcon(st,true)}<span class="bname">${p.pinned?I.pin:''}${esc(label||p.title)}</span>${a?`<span class="alert">${a}</span>`:'<span></span>'}${flap('p'+id, pct+'%')}
+    return `<div class="bproj ${st}" role="button" tabindex="0" data-goto="${esc(id)}" style="--i:${i}">
+      <span class="bline">${label?'<span></span>':`<span class="grip bgrip" data-drag="board" aria-label="Trascina per riordinare">${I.grip}</span>`}${stateIcon(st,true)}<span class="bname">${p.pinned?I.pin:''}${label?'':(projKey(p)!==catKey(p.category)?projIcon(p):'')}${esc(label||p.title)}</span>${a?`<span class="alert">${a}</span>`:'<span></span>'}${flap('p'+id, pct+'%')}
         ${st==='done'?'':headline(p)}
         <span class="bbar"><i data-bar="b${esc(id)}" data-to="${pct}"></i></span></span>
-    </button>`;
+    </div>`;
   }
   function spinFlaps(){
     if(reduce) return;
@@ -1001,12 +1099,12 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     const st=projStatus(p), pct=Math.round(progress(p)*100), isOpen=open.has(id)||(!!query && p.items.some(nodeMatches)), act=actionsOpen.has('p'+id);
     let tot=0, dn=0; walk(p.items,n=>{ if(!n.children.length){ tot++; if(isDone(n)) dn++; } });
     const opt={ro:false, guest:false};
-    return `<article class="card ${st==='done'?'done':''} ${p.archived?'archived':''} ${fx.celebrate===id?'celebrate':''} ${fx.enter===id?'enter':''}" data-pid="${id}" id="card-${id}" style="--i:${i}">
+    return `<article class="card ${st==='done'?'done':''} ${p.archived?'archived':''} ${fx.celebrate===id?'celebrate':''} ${fx.enter===id?'enter':''} ${spot===id?'spot':''}" data-pid="${id}" id="card-${id}" style="--i:${i}">
       <div class="chead">
         <button class="grip" type="button" data-drag="proj" aria-label="Trascina per riordinare">${I.grip}</button>
         <button class="toggle" data-act="toggle-proj" aria-expanded="${isOpen}" aria-label="Mostra le voci" type="button">${I.chev}</button>
         <div class="ctitle">
-          <textarea class="inline title" id="t-${id}" data-field="p-title" rows="1" aria-label="Titolo progetto">${esc(p.title)}</textarea>
+          <div class="trow">${projIcon(p)?`<span class="picon" aria-hidden="true">${projIcon(p)}</span>`:''}<textarea class="inline title" id="t-${id}" data-field="p-title" rows="1" aria-label="Titolo progetto">${esc(p.title)}</textarea></div>
           <div class="meta">
             ${p.pinned?`<span class="tag acc">${I.pin}Fissato</span>`:''}
             ${p.category?`<span class="cat">${catIcon(p.category)}${esc(p.category)}</span>`:''}
@@ -1029,11 +1127,12 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
         <label class="act">${I.cal}<input type="date" id="pd-${id}" data-field="p-deadline" value="${esc(p.deadline)}" aria-label="Scadenza del progetto"></label>
         <label class="act">${I.tag}<input type="text" id="pc-${id}" data-field="p-category" value="${esc(p.category)}" placeholder="Ambito" list="cats" aria-label="Ambito"></label>
         <button class="act" data-act="p-note" type="button">${I.note}Nota</button>
+        <button class="act" data-act="p-icon" aria-pressed="${iconOpen.has(id)}" type="button">${projIcon(p)||I.tag}Icona</button>
         <button class="act" data-act="duplicate" type="button">${I.copy}Duplica</button>
         <button class="act" data-act="save-tpl" type="button">${I.tpl}Salva come modello</button>
         <button class="act" data-act="archive" type="button">${I.box}${p.archived?'Ripristina':'Archivia'}</button>
         <button class="act danger" data-act="del-project" type="button">${I.trash}Elimina</button>
-      </div>`:''}
+      </div>${iconOpen.has(id)?`<div class="iconbox">${iconPicker('data-picon', p.icon||'')}</div>`:''}`:''}
       ${isOpen?`<div class="cbody">
         ${p.items.map(x=>nodeHTML(x,opt)).join('')}
         <div class="addline"><input type="text" id="na-${id}" data-add="root" placeholder="Aggiungi una fase e premi Invio" aria-label="Nuova fase"></div>
@@ -1044,11 +1143,11 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     const ro=g.meta.perm!=='edit', root=g.p.items[0], pct=Math.round(progress(g.p)*100);
     const last=(g.meta.log||[]).slice(-1)[0];
     const isOpen=!collapsed.has('g:'+sid);
-    return `<article class="card shared" data-sid="${esc(sid)}" id="card-g-${esc(sid)}" style="--i:${i}">
+    return `<article class="card shared ${spot==='g:'+sid?'spot':''}" data-sid="${esc(sid)}" id="card-g-${esc(sid)}" style="--i:${i}">
       <div class="chead" style="grid-template-columns:auto minmax(0,1fr) auto">
         <button class="toggle" data-act="toggle-guest" aria-expanded="${isOpen}" aria-label="Mostra le voci" type="button">${I.chev}</button>
         <div class="ctitle">
-          <div class="ptitle">${esc(g.meta.projTitle||'Progetto condiviso')}</div>
+          <div class="trow">${iconSvg(IC.guess(g.meta.projTitle))?`<span class="picon" aria-hidden="true">${iconSvg(IC.guess(g.meta.projTitle))}</span>`:''}<div class="ptitle">${esc(g.meta.projTitle||'Progetto condiviso')}</div></div>
           <div class="meta"><span class="tag acc">${I.users}${ro?'Solo lettura':'Può modificare'}</span><span>da ${esc(g.meta.ownerEmail||'')}</span></div>
           ${last?`<div class="lastlog">Ultima modifica: ${esc(String(last.who||'').replace(/@.*/,''))} ${esc(last.what||'')} · ${esc(agoText(last.t))}</div>`:''}
         </div>
@@ -1203,8 +1302,8 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     const tpls=Object.entries(projects).filter(([,p])=>p.template);
     $('#tpl-list').innerHTML = tpls.length ? tpls.map(([id,p])=>`<li><span>${esc(p.title)}</span><button class="btn small ghost" type="button" data-del-tpl="${id}">Elimina</button></li>`).join('') : '<li style="color:var(--muted)">Nessun modello salvato.</li>';
     const cats=[...new Set(Object.values(projects).filter(p=>!p.inbox&&!p.template).map(p=>p.category.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'it'));
-    $('#cat-icons').innerHTML = cats.length ? cats.map(c=>{ const cur=(prefs.catIcons||{})[c]||'';
-      return `<div class="catrow"><b>${esc(c)}</b><div class="iconpick">${Object.entries(CAT_ICONS).map(([k,d])=>`<button type="button" data-cat-icon="${esc(c)}" data-icon="${k}" aria-pressed="${cur===k}" aria-label="Icona ${k}">${sv(d)}</button>`).join('')}</div></div>`; }).join('')
+    $('#cat-icons').innerHTML = cats.length ? cats.map(c=>{ const cur=(prefs.catIcons||{})[c]||''; const auto=IC.guess(c);
+      return `<div class="catrow"><b>${catIcon(c)}${esc(c)}</b><span class="status">${cur?(cur==='none'?'Nessuna icona':'Scelta da te'):(auto?'Scelta automatica: '+esc(IC.byKey[auto].label):'Nessuna parola riconosciuta: scegline una')}</span>${iconPicker(`data-cat-icon="${esc(c)}"`, cur)}</div>`; }).join('')
       : '<p>Gli ambiti compariranno qui quando li assegnerai ai progetti.</p>';
   }
 
@@ -1223,9 +1322,9 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   const toggleSet = (s,k) => s.has(k)?s.delete(k):s.add(k);
   function goto(key, nid){
     ui.tab='board';
-    if(key.startsWith('g:')){ collapsed.delete(key); saveUi(); render(true); const el = nid ? document.querySelector(`[data-sid="${CSS.escape(key.slice(2))}"] [data-nid="${nid}"] > .nrow`) : document.getElementById('card-g-'+key.slice(2)); hit(el, nid); return; }
+    if(key.startsWith('g:')){ collapsed.delete(key); spot=key; saveUi(); render(true); const el = nid ? document.querySelector(`[data-sid="${CSS.escape(key.slice(2))}"] [data-nid="${nid}"] > .nrow`) : document.getElementById('card-g-'+key.slice(2)); hit(el, nid); return; }
     if(!projects[key]) return;
-    open.add(key); if(ui.cat && projects[key].category.trim()!==ui.cat) ui.cat='';
+    open.add(key); spot=key; if(ui.cat && projects[key].category.trim()!==ui.cat) ui.cat='';
     if(projects[key].archived) ui.archiveOpen=true;
     if(nid){ const f=findNode(projects[key],nid); if(f) f.path.forEach(a=>collapsed.delete(a.id)); }
     saveUi(); render(true);
@@ -1237,8 +1336,8 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     const b=e.target.closest('[data-act]'); if(!b) return;
     const c=ctx(b); const {pid,p,node,sib,path}=c; const a=b.dataset.act;
     if(!p) return;
-    if(a==='toggle-proj'){ toggleSet(open,pid); saveUi(); render(true); return; }
-    if(a==='toggle-guest'){ toggleSet(collapsed,'g:'+c.sid); saveUi(); render(true); return; }
+    if(a==='toggle-proj'){ if(open.has(pid)){ open.delete(pid); if(spot===pid) spot=null; } else { open.add(pid); spot=pid; } saveUi(); render(true); if(spot===pid) hit(document.getElementById('card-'+pid)); return; }
+    if(a==='toggle-guest'){ const k='g:'+c.sid; if(collapsed.has(k)){ collapsed.delete(k); spot=k; } else { collapsed.add(k); if(spot===k) spot=null; } saveUi(); render(true); return; }
     if(a==='toggle-node'){ toggleSet(collapsed,node.id); saveUi(); render(true); return; }
     if(a==='more-proj'){ toggleSet(actionsOpen,'p'+pid); render(true); return; }
     if(a==='more'){ toggleSet(actionsOpen,node.id); render(true); return; }
@@ -1260,6 +1359,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     // azioni sul progetto (solo l'autore)
     if(a==='p-urgent'){ mutate(pid,pp=>{ pp.priority = pp.priority?0:1; }); return; }
     if(a==='pin'){ mutate(pid,pp=>{ pp.pinned=!pp.pinned; }); return; }
+    if(a==='p-icon'){ toggleSet(iconOpen,pid); render(true); return; }
     if(a==='p-note'){ noteOpen.add('p'+pid); actionsOpen.delete('p'+pid); render(true); focusLater('pn-'+pid); return; }
     if(a==='archive'){ const was=p.archived; actionsOpen.delete('p'+pid); mutate(pid,pp=>{ pp.archived=!pp.archived; }); toast({kind:'phase', head:was?'RIPRISTINATO':'ARCHIVIATO', text:p.title}); return; }
     if(a==='duplicate'){ const id=uid(); projects[id]=M.normalize({title:p.title+' (copia)', category:p.category, note:p.note, items:cloneTree(p.items), order:maxOrder()+1, createdAt:Date.now()});
@@ -1269,6 +1369,11 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
     if(a==='del-project'){ actionsOpen.delete('p'+pid); withUndo(p.title, ()=>{ delete projects[pid]; deleted[pid]=Date.now(); open.delete(pid); saveUi(); }); return; }
   }
   [listEl, archEl, sharedEl, oggiEl].forEach(el=>el.addEventListener('click', onListClick));
+  [listEl, archEl].forEach(el=>el.addEventListener('click', e=>{
+    const b=e.target.closest('[data-picon]'); if(!b) return;
+    const c=ctx(b); if(!c.pid) return; const k=b.dataset.icon;
+    mutate(c.pid, p=>{ p.icon=k; });
+  }));
   archEl.addEventListener('click', e=>{ if(e.target.closest('#arch-toggle')){ ui.archiveOpen=!ui.archiveOpen; saveUi(); render(true); } });
 
   function onChange(e){
@@ -1351,9 +1456,9 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   // trascinamento per riordinare
   document.addEventListener('pointerdown', e=>{
     const g=e.target.closest('.grip'); if(!g || e.button>0) return;
-    const kind=g.dataset.drag, item=g.closest(kind==='proj'?'.card':'.node'); if(!item) return;
+    const kind=g.dataset.drag, sel = kind==='proj'?'.card':(kind==='board'?'.bproj':'.node'), item=g.closest(sel); if(!item) return;
     e.preventDefault();
-    drag={kind, item, box:item.parentElement, sel:kind==='proj'?'.card':'.node', id:e.pointerId};
+    drag={kind, item, box:item.parentElement, sel, id:e.pointerId};
     item.classList.add('dragging'); try{ g.setPointerCapture(e.pointerId); }catch(err){}
     if(navigator.vibrate) try{ navigator.vibrate(8); }catch(err){}
   });
@@ -1368,7 +1473,14 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   function endDrag(){
     if(!drag) return;
     const d=drag; drag=null; d.item.classList.remove('dragging');
-    const ids=[...d.box.children].filter(c=>c.matches(d.sel)).map(c=>d.kind==='proj'?c.dataset.pid:c.dataset.nid);
+    const ids=[...d.box.children].filter(c=>c.matches(d.sel)).map(c=>d.kind==='proj'?c.dataset.pid:(d.kind==='board'?c.dataset.goto:c.dataset.nid));
+    if(d.kind==='board'){
+      suppressClick=Date.now();
+      const cat=d.box.dataset.cat, now=Date.now(); let changed=false;
+      ids.forEach((id,i)=>{ const p=projects[id]; if(p && p.order!==i+1){ p.order=i+1; p.mu=now; p.updatedAt=now; changed=true; } });
+      if(changed && cat){ prefs.manualGroups=Object.assign({}, prefs.manualGroups, {[cat]:true}); prefs.u=now; }
+      if(changed) save(); render(true); return;
+    }
     if(d.kind==='proj'){
       const now=Date.now(); let changed=false;
       ids.forEach((id,i)=>{ const p=projects[id]; if(p && p.order!==i+1){ p.order=i+1; p.mu=now; p.updatedAt=now; changed=true; } });
@@ -1385,9 +1497,12 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   document.addEventListener('pointercancel', endDrag);
 
   boardEl.addEventListener('click', e=>{
+    if(Date.now()-suppressClick<450 || e.target.closest('.grip')) return;
+    const so=e.target.closest('[data-sort-group]'); if(so){ const c=so.dataset.sortGroup; prefs.manualGroups=Object.assign({}, prefs.manualGroups, {[c]:!manual(c)}); prefs.u=Date.now(); save(); render(true); return; }
     const g=e.target.closest('[data-done-group]'); if(g){ toggleSet(doneOpen,g.dataset.doneGroup); saveUi(); render(true); return; }
     const b=e.target.closest('[data-goto]'); if(b) goto(b.dataset.goto);
   });
+  boardEl.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e.target.matches('[data-goto]')){ e.preventDefault(); goto(e.target.dataset.goto); } });
   weekEl.addEventListener('click', e=>{ const b=e.target.closest('[data-day]'); if(!b) return; selectedDay = selectedDay===b.dataset.day ? null : b.dataset.day; renderOggi(); });
   document.addEventListener('click', e=>{
     if(e.target.closest('#weekly-close')){ showWeekly=false; ui.weeklySeen=weekKey(); saveUi(); renderWeekly(); }
@@ -1446,7 +1561,8 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   $('#f-close').addEventListener('click', closeFocus);
   $('#f-done').addEventListener('click',()=>{ if(!fstate) return; const c=fstate.c, nid=fstate.nid; closeFocus(); const p=c.guest?guest[c.sid]&&guest[c.sid].p:projects[c.pid]; const f=p&&findNode(p,nid); if(f) doMutate(c,()=>{ f.n.status='done'; }, 'ha completato «'+f.n.title+'»'); });
   $('#f-durs').addEventListener('click', e=>{ const b=e.target.closest('[data-min]'); if(!b||!fstate||fstate.running) return; settings.focusMin=+b.dataset.min; store.set(SETKEY,settings); fstate.total=fstate.left=settings.focusMin*60; $('#f-durs').querySelectorAll('[data-min]').forEach(x=>x.setAttribute('aria-pressed', x===b)); drawFocus(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && fstate) closeFocus(); });
+  document.addEventListener('keydown', e=>{ if(e.key!=='Escape') return; if(fstate) closeFocus(); else if(spot){ spot=null; render(true); } });
+  $('#dim').addEventListener('click', ()=>{ spot=null; render(true); });
 
   /* ---------- impostazioni ---------- */
   const dlg=$('#settings');
@@ -1466,7 +1582,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   $('#tpl-list').addEventListener('click', e=>{ const b=e.target.closest('[data-del-tpl]'); if(!b) return; const id=b.dataset.delTpl, t=projects[id]; if(!t) return;
     withUndo('Modello: '+t.title, ()=>{ delete projects[id]; deleted[id]=Date.now(); }); });
   $('#cat-icons').addEventListener('click', e=>{ const b=e.target.closest('[data-cat-icon]'); if(!b) return; const c=b.dataset.catIcon, k=b.dataset.icon;
-    prefs.catIcons=Object.assign({}, prefs.catIcons); prefs.catIcons[c] = prefs.catIcons[c]===k ? '' : k; prefs.u=Date.now(); save(); render(true); });
+    prefs.catIcons=Object.assign({}, prefs.catIcons); prefs.catIcons[c] = k; prefs.u=Date.now(); save(); render(true); });
 
   /* ---------- file ---------- */
   const stamp = () => isoOf(new Date());
@@ -1692,7 +1808,7 @@ textarea.note{font-size:.8rem;padding-left:19px;background-position:3px 4px}
   let seen=false; try{ seen=sessionStorage.getItem('plancia-intro')==='1'; sessionStorage.setItem('plancia-intro','1'); }catch(e){}
   const splash=$('#splash');
   if(seen || reduce || azione){ splash.remove(); }
-  else { intro=true; $('#app').classList.add('intro'); setTimeout(()=>{ splash.classList.add('gone'); setTimeout(()=>splash.remove(),500); }, 1150); setTimeout(()=>{ intro=false; $('#app').classList.remove('intro'); }, 2600); }
+  else { intro=true; $('#app').classList.add('intro'); setTimeout(()=>{ splash.classList.add('gone'); setTimeout(()=>splash.remove(),550); }, 2850); setTimeout(()=>{ intro=false; $('#app').classList.remove('intro'); }, 4300); }
 
   if(firstRun){ save(true); Object.keys(projects).forEach(id=>open.add(id)); saveUi(); }
   render(true); notifStatus(); checkDeadlines();
