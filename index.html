@@ -108,6 +108,9 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .boards{display:flex;flex-direction:column;gap:14px}
 .group{border-radius:24px;padding:14px 16px 6px;animation:rise .5s var(--ease) both;animation-delay:calc(var(--i,0)*45ms)}
 @keyframes rise{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.group[data-cat],.group[data-shared],#archive .group,#results .group{cursor:pointer}
+.reorder .group{cursor:default}
+.prow.tapped{transform:scale(.985)}
 .gh{display:flex;align-items:center;gap:10px;margin-bottom:4px;min-height:32px}
 .gico{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:0 0 auto}
 .gico .i{width:17px;height:17px}
@@ -513,6 +516,40 @@ button{cursor:pointer;background:none;border:0;padding:0}
 .bigicon{width:84px;height:84px;border-radius:26px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
 .bigicon svg{width:42px;height:42px}
 
+/* firma */
+.credit{display:flex;flex-direction:column;align-items:center;gap:3px;padding:18px 0 8px;text-align:center;color:var(--sec);font-size:13px}
+.credit b{color:var(--ink);font-size:15px;font-weight:600;margin-top:6px}
+.credit small{font-size:11.5px;color:var(--ter)}
+.credit-badge{width:46px;height:46px;display:block}
+.credit-badge svg{width:100%;height:100%}
+.splash-credit{position:absolute;left:0;right:0;bottom:calc(var(--safe-b) + 34px);text-align:center;font-size:12.5px;color:var(--ter);letter-spacing:.02em;opacity:0;animation:viewIn .8s 1s var(--ease) forwards}
+.side-credit{display:none}
+
+/* colori del tema */
+.swatches{display:flex;flex-wrap:wrap;gap:10px}
+.swatch{width:30px;height:30px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px var(--bg),0 0 0 2px transparent;transition:transform .25s var(--spring),box-shadow .2s}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--solid),0 0 0 4.5px var(--c);transform:scale(1.06)}
+.swatch:active{transform:scale(.88)}
+.srow .swatches{width:100%}
+
+/* guida passo passo */
+.gspot{position:fixed;z-index:96;pointer-events:none;border-radius:16px;box-shadow:0 0 0 9999px rgba(8,10,18,.48);transition:left .45s var(--spring),top .45s var(--spring),width .45s var(--spring),height .45s var(--spring),opacity .3s;opacity:0}
+.gspot:after{content:"";position:absolute;inset:-4px;border-radius:inherit;border:2px solid var(--accent);animation:gpulse 1.6s ease-out infinite}
+@keyframes gpulse{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.08)}}
+.gspot.swipe:before,.gspot.press:before{content:"";position:absolute;top:50%;left:38%;width:34px;height:34px;margin-top:-17px;border-radius:50%;background:rgba(255,255,255,.55);border:2px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.gspot.swipe:before{animation:gswipe 1.8s var(--ease) infinite}
+.gspot.press:before{animation:gpress 1.6s ease-in-out infinite}
+@keyframes gswipe{0%{transform:translateX(-40px);opacity:0}15%{opacity:1}70%{transform:translateX(110px);opacity:1}100%{transform:translateX(110px);opacity:0}}
+@keyframes gpress{0%,100%{transform:scale(1);opacity:.4}40%,70%{transform:scale(.72);opacity:1}}
+.gbub{position:fixed;z-index:97;width:min(330px,calc(100vw - 24px));border-radius:20px;padding:14px 16px 12px;background:var(--glass-strong);-webkit-backdrop-filter:blur(40px) saturate(180%);backdrop-filter:blur(40px) saturate(180%);border:1px solid var(--stroke);box-shadow:var(--shadow-lg);transition:left .45s var(--spring),top .45s var(--spring),opacity .3s}
+.gbub.in{animation:gin .45s var(--spring)}
+@keyframes gin{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.gbub .gstep{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.gbub p{margin:0 0 10px;font-size:15px;line-height:1.45}
+.gbtns{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gbtns .linkbtn{font-size:13.5px;color:var(--sec)}
+.gbtns .pillbtn:disabled{opacity:.4}
+
 /* ---------- computer ---------- */
 @media (min-width:960px){
   #app{max-width:none;margin:0 0 0 284px;padding:36px 36px 60px;transition:margin .5s var(--ease)}
@@ -533,6 +570,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
   .side .newbtn{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 4px 6px;padding:10px;border-radius:14px;background:var(--accent);color:#fff;font-weight:600;font-size:14.5px;box-shadow:0 8px 18px -8px var(--accent);transition:transform .2s var(--spring)}
   .side .newbtn:active{transform:scale(.96)}
   .side .grow{flex:1}
+  .side-credit{display:block;font-size:11.5px;color:var(--ter);padding:8px 10px 2px}
   .proj{left:auto;top:16px;right:16px;bottom:16px;width:488px;border-radius:28px;background:var(--glass);-webkit-backdrop-filter:blur(40px) saturate(180%);backdrop-filter:blur(40px) saturate(180%);border:1px solid var(--stroke);box-shadow:var(--shadow-lg);transform:translateX(calc(100% + 30px))}
   .proj .blobs{display:none}
   .proj-in{padding:12px 18px 40px}
@@ -559,6 +597,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
     <div class="word" id="splash-word"></div>
     <div class="bar"><i></i></div>
   </div>
+  <div class="splash-credit">made by GS</div>
 </div>
 
 <aside class="side glass" id="side" aria-label="Navigazione">
@@ -571,6 +610,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
   <div id="side-shared"></div>
   <div class="grow"></div>
   <button class="nv" type="button" data-tab="set" aria-selected="false"></button>
+  <div class="side-credit">made by GS</div>
 </aside>
 
 <header class="navbar glass" id="navbar" aria-hidden="true"><span id="navbar-t"></span></header>
@@ -642,6 +682,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
       <div class="sh">Aspetto</div>
       <div class="slist glass">
         <div class="srow"><span class="lab">Tema</span><span class="segmini" id="set-theme"><button type="button" data-v="auto">Automatico</button><button type="button" data-v="light">Chiaro</button><button type="button" data-v="dark">Scuro</button></span></div>
+        <div class="srow" style="flex-wrap:wrap;row-gap:10px"><span class="lab">Colore</span><div class="swatches" id="set-accent"></div></div>
         <label class="srow"><span class="lab">Suoni</span><input type="checkbox" class="switch" id="set-sound"></label>
       </div>
     </div>
@@ -681,11 +722,13 @@ button{cursor:pointer;background:none;border:0;padding:0}
     <div class="sgroup">
       <div class="sh">Guida</div>
       <div class="slist glass">
-        <button class="srow act" type="button" id="tour-again">Rivedi il tutorial</button>
+        <button class="srow act" type="button" id="guide-start">Guida passo passo: crea il primo progetto</button>
+        <button class="srow act" type="button" id="tour-again">Rivedi le schede introduttive</button>
         <button class="srow act" type="button" id="install" hidden>Installa sul dispositivo</button>
       </div>
       <div class="sfoot">Ogni account ha progetti separati e visibili solo a chi li possiede. Non inserire dati di pazienti o dati sanitari che permettano di identificare qualcuno.</div>
     </div>
+    <div class="credit"><span class="credit-badge" id="credit-badge"></span><b>Plancia</b><span>made by GS</span><small>Versione 15</small></div>
   </section>
 </main>
 
@@ -1484,6 +1527,15 @@ button{cursor:pointer;background:none;border:0;padding:0}
     }
     const g=el.closest('[data-goto]');
     if(g && !el.closest('.grip')){ if(reorder==='board' && g.closest('#board')) return; openProj(g.dataset.goto); return; }
+    // tutta la bolla dell'ambito è cliccabile: si apre il progetto più vicino al punto toccato
+    const grp=el.closest('#board .group, #archive .group, #results .group');
+    if(grp && !reorder && !el.closest('button, a, input, .grip')){
+      const rows=[...grp.querySelectorAll('.prow')]; if(!rows.length) return;
+      const y=e.clientY, dist=r=>{ const b=r.getBoundingClientRect(); return y<b.top ? b.top-y : (y>b.bottom ? y-b.bottom : 0); };
+      const best=rows.reduce((a,r)=>dist(r)<dist(a)?r:a, rows[0]);
+      best.classList.add('tapped'); setTimeout(()=>best.classList.remove('tapped'), 220);
+      openProj(best.dataset.goto);
+    }
   });
   document.addEventListener('keydown', e=>{
     if((e.key==='Enter'||e.key===' ') && e.target.matches('[data-goto], .rb[data-act="goto"]')){ e.preventDefault(); e.target.click(); }
@@ -2089,12 +2141,31 @@ button{cursor:pointer;background:none;border:0;padding:0}
   $('#set-name').addEventListener('input', e=>{ settings.name=e.target.value.trim(); store.set(SETKEY,settings); renderChrome(); });
   let tt=null;
   $('#set-title').addEventListener('input', e=>{ clearTimeout(tt); tt=setTimeout(()=>{ setPref('title', e.target.value.trim()); renderSide(); }, 400); });
+  // colori del tema: [nome, accento chiaro, accento scuro, aloni chiari, aloni scuri]
+  const PAL = {
+    blu:['Blu','#3a6fd8','#6a9bff',['#b9c9e6','#d9d2ea','#cfe3dc'],['#1f3466','#3a2a5a','#173b33']],
+    azzurro:['Azzurro','#1b8fa6','#4cc9de',['#c3e2ea','#cfe0f3','#d2ead9'],['#10394a','#1a2f55','#143a33']],
+    verde:['Verde','#2a8f55','#4cd38a',['#c4e3cf','#d9e9c9','#cde3e6'],['#163d2a','#23402a','#15343a']],
+    arancione:['Arancione','#d9701a','#ffa043',['#f3d6b8','#efd0c8','#e8e2c4'],['#4a2c12','#45231f','#3a3415']],
+    rosso:['Rosso','#c8384f','#ff7085',['#f1cbd0','#ead3e3','#f2dccf'],['#4a1a24','#3a1f40','#45281c']],
+    rosa:['Rosa','#cc4a8a','#ff7eb6',['#f0cde0','#e3d0ef','#f2dccf'],['#4a1c36','#3a1f52','#4a2a20']],
+    viola:['Viola','#7650cf','#a98bff',['#d4c8ee','#e6cfe6','#cbd4ee'],['#2f2266','#47225a','#1f2c55']],
+    grafite:['Grafite','#4b5563','#aab2c0',['#d5d8de','#e2dfe6','#d7e0dc'],['#262a33','#2e2a38','#1f2a28']]
+  };
+  const hexA = (h,a) => `rgba(${parseInt(h.slice(1,3),16)},${parseInt(h.slice(3,5),16)},${parseInt(h.slice(5,7),16)},${a})`;
   function applyTheme(){
     const t=settings.theme; if(t==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=t;
     const dark = t==='dark' || (t==='auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+    const pal=PAL[prefs.accent]||PAL.blu, acc=dark?pal[2]:pal[1], bl=dark?pal[4]:pal[3], st=document.documentElement.style;
+    st.setProperty('--accent', acc); st.setProperty('--accent-soft', hexA(acc, dark?.16:.12));
+    bl.forEach((c,i)=>st.setProperty('--blob'+(i+1), c));
+    $$('[data-accent]').forEach(b=>b.setAttribute('aria-pressed', b.dataset.accent===(PAL[prefs.accent]?prefs.accent:'blu')));
     $('#theme-color').setAttribute('content', dark?'#0b0b0f':'#f2f2f7');
     $$('#set-theme [data-v]').forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===t));
   }
+  const swatches = () => Object.entries(PAL).map(([k,p])=>`<button type="button" class="swatch" data-accent="${k}" style="--c:${p[1]}" aria-label="${p[0]}" title="${p[0]}"></button>`).join('');
+  $('#set-accent').innerHTML=swatches();
+  document.addEventListener('click', e=>{ const b=e.target.closest('[data-accent]'); if(!b) return; setPref('accent', b.dataset.accent); applyTheme(); Sound.play('tap'); });
   applyTheme();
   $('#set-theme').addEventListener('click', e=>{ const b=e.target.closest('[data-v]'); if(!b) return; settings.theme=b.dataset.v; store.set(SETKEY,settings); applyTheme(); Sound.play('tap'); });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
@@ -2103,7 +2174,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
   $('#tpl-list').addEventListener('click', e=>{ const b=e.target.closest('[data-del-tpl]'); if(!b) return; const id=b.dataset.delTpl, t=projects[id]; if(!t) return;
     withUndo('Modello: '+t.title, ()=>{ delete projects[id]; deleted[id]=Date.now(); }); });
   $('#cat-icons').addEventListener('click', e=>{ const b=e.target.closest('[data-cat-icon]'); if(!b) return; iconSheet({cat:b.dataset.catIcon}); });
-  $('#tour-again').addEventListener('click', ()=>openTour());
+  $('#tour-again').addEventListener('click', ()=>openTour(false));
 
   /* ---------- file ---------- */
   const stamp = () => isoOf(new Date());
@@ -2276,7 +2347,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
       Object.entries(state.projects).forEach(([k,r])=>{ next[k]=M.fromRecord(r); });
       const changed = JSON.stringify(next)!==JSON.stringify(projects) || JSON.stringify(state.deleted||{})!==JSON.stringify(deleted) || JSON.stringify(state.prefs||{})!==JSON.stringify(prefs);
       projects=next; deleted=state.deleted||{}; if(state.prefs && state.prefs.catIcons) prefs=Object.assign({catIcons:{}, manualGroups:{}, u:0}, state.prefs);
-      if(changed){ save(true); render(); checkDeadlines(); }
+      if(changed){ save(true); applyTheme(); render(); checkDeadlines(); }
       return changed;
     },
     onLocalChange(fn){ pushHook=fn; },
@@ -2321,7 +2392,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
       g.p.items=M.unflatten(m.list, M.ROOT).map(n=>M.normalizeNode(n)); g.p.deletedNodes=m.del; g.lastAction=''; saveGuest(); render(); },
     clearGuest(){ guest={}; saveGuest(); if(cur && cur.startsWith('g:')) closeProj(); render(); },
     syncUser(u){ syncUser=u; render(); },
-    accountCreated(){ if(!prefs.tutorialDone) setTimeout(openTour, 600); },
+    accountCreated(){ if(!prefs.tutorialDone) setTimeout(()=>openTour(true), 600); },
     sync(st){
       syncState=st;
       const unreach = st.state==='err' && !st.email;
@@ -2339,9 +2410,9 @@ button{cursor:pointer;background:none;border:0;padding:0}
   const SLIDES = () => [
     {art:`<div class="badge glass" style="width:96px;height:96px;border-radius:28px;padding:10px;display:grid;place-items:center">${badgeSvg()}</div>`, h:'Benvenuto nella tua Plancia',
       p:'Un posto solo per progetti, fasi e scadenze, sul telefono e sul computer. Due dettagli per cominciare:',
-      x:`<input class="field" id="tr-name" type="text" placeholder="Come ti chiami?" value="${esc(settings.name)}" autocomplete="given-name"><input class="field" id="tr-title" type="text" placeholder="Titolo di apertura (es. Road to ministry)" value="${esc(prefs.title||'')}" maxlength="28"><p style="font-size:13px">Il titolo compare ogni volta che apri l’app. Puoi cambiarlo quando vuoi dalle impostazioni.</p>`},
+      x:`<input class="field" id="tr-name" type="text" placeholder="Come ti chiami?" value="${esc(settings.name)}" autocomplete="given-name"><input class="field" id="tr-title" type="text" placeholder="Titolo di apertura (es. Road to ministry)" value="${esc(prefs.title||'')}" maxlength="28"><p style="font-size:13px">Il titolo compare ogni volta che apri l’app. Puoi cambiarlo quando vuoi dalle impostazioni.</p><div class="flabel" style="margin:4px 0 0">Il tuo colore</div><div class="swatches">${swatches()}</div>`},
     {art:`<div class="artgrp"><div class="h"><i></i>Università</div><div class="p">Tesi di laurea</div><div class="l"><i></i></div><div class="p">Esame di farmacologia</div><div class="l"><i style="animation-delay:-1.2s"></i></div></div>`, h:'Ambiti, progetti, fasi',
-      p:'Ogni progetto appartiene a un <b>ambito</b>, per esempio Università, Tirocinio o Ricerca. Dentro il progetto aggiungi le <b>fasi</b>, e dentro ogni fase tutte le sottofasi che servono. La linea blu mostra quanto hai completato.'},
+      p:'Ogni progetto appartiene a un <b>ambito</b>, per esempio Università, Tirocinio o Ricerca. Dentro il progetto aggiungi le <b>fasi</b>, e dentro ogni fase tutte le sottofasi che servono. La linea colorata mostra quanto hai completato.'},
     {art:`<div class="demo swipe"><div class="bk"><span class="g">Fatto</span><span class="b">In corso</span></div><div class="drow"><span class="c"></span><b>Ricerca bibliografica</b></div><span class="finger"></span></div>`, h:'I gesti',
       x:`<ul><li><b>Tocca il cerchio</b> per segnare una voce come fatta.</li><li><b>Scorri verso destra</b>: fatto.</li><li><b>Scorri verso sinistra</b>: «In corso» oppure altre azioni.</li><li><b>Tieni premuto</b> una voce o un progetto per tutte le azioni: scadenza, nota, sottofase, condivisione.</li><li><b>Tocca un titolo</b> per modificarlo.</li></ul><p style="font-size:13px">Sul computer usa il tasto destro o i tre puntini.</p>`},
     {art:`<div class="bigicon" style="border-radius:50%;background:var(--accent);color:#fff">${I.plusb}</div>`, h:'Aggiungere',
@@ -2355,17 +2426,17 @@ button{cursor:pointer;background:none;border:0;padding:0}
     {art:`<div class="bigicon">${I.shield}</div>`, h:'Riservatezza',
       x:`<ul><li>I tuoi progetti li vedi solo tu, oltre a ciò che decidi di condividere.</li><li>I dati sincronizzati sono conservati su Firebase (Google). Chi amministra il servizio può tecnicamente accedervi.</li><li><b>Non inserire dati di pazienti</b> né informazioni sanitarie che permettano di identificare qualcuno.</li><li>Senza account, tutto resta solo su questo dispositivo.</li></ul>`}
   ];
-  let tourGoAcc=false;
-  function openTour(){
-    const sl=SLIDES(); tourGoAcc=false;
+  let tourGoAcc=false, tourGuide=false, tourNext=false;
+  function openTour(withGuide){
+    const sl=SLIDES(); tourGoAcc=false; tourGuide=!!withGuide;
     $('#track').innerHTML = sl.map(s=>`<section class="slide"><div class="art">${s.art}</div><h2>${s.h}</h2>${s.p?`<p>${s.p}</p>`:''}${s.x||''}</section>`).join('');
     $('#tdots').innerHTML = sl.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('');
     $('#tour').hidden=false; $('#track').scrollLeft=0; tourUpd();
   }
   const tIdx = () => Math.round($('#track').scrollLeft / Math.max(1,$('#track').clientWidth));
-  function tourUpd(){ const i=tIdx(), n=$('#track').children.length; $$('#tdots i').forEach((d,k)=>d.classList.toggle('on', k===i)); $('#t-next').textContent = i>=n-1 ? 'Inizia' : 'Avanti'; $('#t-skip').style.visibility = i>=n-1 ? 'hidden' : 'visible'; }
+  function tourUpd(){ const i=tIdx(), n=$('#track').children.length; $$('#tdots i').forEach((d,k)=>d.classList.toggle('on', k===i)); $('#t-next').textContent = i>=n-1 ? (tourGuide?'Inizia la guida':'Fine') : 'Avanti'; $('#t-skip').style.visibility = i>=n-1 ? 'hidden' : 'visible'; }
   $('#track').addEventListener('scroll', ()=>requestAnimationFrame(tourUpd), {passive:true});
-  $('#t-next').addEventListener('click', ()=>{ const i=tIdx(), n=$('#track').children.length; Sound.play('tap'); if(i>=n-1) finishTour(); else $('#track').scrollTo({left:(i+1)*$('#track').clientWidth, behavior:reduce?'auto':'smooth'}); });
+  $('#t-next').addEventListener('click', ()=>{ const i=tIdx(), n=$('#track').children.length; Sound.play('tap'); if(i>=n-1){ tourNext=tourGuide; finishTour(); } else $('#track').scrollTo({left:(i+1)*$('#track').clientWidth, behavior:reduce?'auto':'smooth'}); });
   $('#t-skip').addEventListener('click', ()=>finishTour());
   $('#track').addEventListener('click', e=>{ if(e.target.closest('#tr-acc')){ tourGoAcc=true; finishTour(); } });
   function finishTour(){
@@ -2375,14 +2446,106 @@ button{cursor:pointer;background:none;border:0;padding:0}
     prefs.tutorialDone=true; prefs.u=Date.now(); save();
     const t=$('#tour'); t.style.transition='opacity .35s'; t.style.opacity=0;
     setTimeout(()=>{ t.hidden=true; t.style.opacity=''; t.style.transition=''; $('#track').innerHTML=''; }, 360);
-    render(true);
+    render(true); applyTheme();
     if(tourGoAcc) switchTab('set');
+    else if(tourNext) setTimeout(startGuide, 450);
+    tourNext=false;
   }
+
+  /* ---------- guida passo passo sull'app vera ---------- */
+  let guide=null;
+  const vis = el => el && el.getClientRects().length && getComputedStyle(el).visibility!=='hidden' ? el : null;
+  const firstVis = sel => $$(sel).find(vis) || null;
+  function guideSteps(){
+    const touch = !desk();
+    const g=guide;
+    const nodeRow = () => g.nid ? firstVis(`#proj [data-nid="${g.nid}"] > .sw > .row`) : null;
+    const nodeOf = () => { const p=projects[g.pid]; const f=p&&g.nid&&findNode(p,g.nid); return f&&f.n; };
+    return [
+      { t:()=>firstVis(touch?'#plus':'#side-new'), text:`Iniziamo dal tuo primo progetto. Tocca <b>${touch?'+':'Nuovo'}</b>.`,
+        enter(){ if(cur) closeProj(); closeSheet(); closeMenu(); if(ui.tab!=='board') switchTab('board'); },
+        done:()=>!!$('#add-title') },
+      { t:()=>$('#add-title'), text:'Scrivi il nome del progetto, per esempio <b>Esame di anatomia</b>. Puoi aggiungere anche una data: «Esame di anatomia 15/12».',
+        enter(){ if(add && add.mode!=='proj'){ add.mode='proj'; addRedraw('add-title'); } },
+        next:()=>{ const f=$('#add-title'); return !!(f && f.value.trim().length>1); }, done:()=>!$('#add-title') },
+      { t:()=>$('#sheet .chips'), text:'Scegli un <b>ambito</b> tra quelli esistenti, oppure tocca <b>Nuovo</b> e scrivine uno (per esempio Università).', next:()=>true, done:()=>!$('#add-title') },
+      { t:()=>firstVis('#sheet .bigbtn[data-add-go]'), text:'Ora premi <b>Aggiungi</b>.',
+        done:()=>{ if(cur && projects[cur] && $('#sheet').hidden){ g.pid=cur; return true; } return false; } },
+      { t:()=>g.pid && document.getElementById('na-'+g.pid), text:'Questa è la pagina del progetto. Scrivi la <b>prima fase</b>, per esempio «Ripasso capitoli 1-3», e premi <b>Invio</b>.',
+        enter(){ g.base=(projects[g.pid]||{items:[]}).items.length; },
+        done:()=>{ const p=projects[g.pid]; if(p && p.items.length>g.base){ g.nid=p.items[p.items.length-1].id; return true; } return false; } },
+      { t:nodeRow, cls:touch?'swipe':'', text: touch ? 'Quando l’hai fatta, <b>scorri la voce verso destra</b>. Funziona anche toccare il cerchio. Prova ora.' : 'Quando l’hai fatta, <b>tocca il cerchio</b>. Prova ora.',
+        enter(){ if(document.activeElement) document.activeElement.blur(); }, done:()=>{ const n=nodeOf(); return !!(n && n.status==='done'); } },
+      { t:nodeRow, cls:touch?'press':'', text: touch ? 'Ora <b>tieni premuta</b> la voce: si apre il menu con scadenza, note, sottofasi e condivisione.' : 'Ora fai <b>clic con il tasto destro</b> sulla voce (o usa i tre puntini): si apre il menu con scadenza, note, sottofasi e condivisione.',
+        done:()=>!$('#menu').hidden },
+      { t:()=>$('#menu').hidden?null:$('#menu'), text:'Da qui fai tutto il resto. Per ora <b>tocca fuori dal menu</b> per chiuderlo.', done:()=>$('#menu').hidden },
+      { t:()=>firstVis('#proj [data-pact="close"]'), text: touch ? 'Torna al <b>Tabellone</b> con la freccia in alto. Puoi anche scorrere dal bordo sinistro dello schermo.' : 'Chiudi il pannello per tornare al <b>Tabellone</b>.', done:()=>!cur },
+      { t:()=>g.pid && $$('#board .prow').find(r=>r.dataset.goto===g.pid), text:'Ecco il tuo progetto nel Tabellone, con la linea di avanzamento e la prossima cosa da fare. Hai finito la guida.', next:()=>true, last:true }
+    ];
+  }
+  function startGuide(){
+    stopGuide();
+    guide={i:-1, pid:null, nid:null, base:0, raf:0, last:''};
+    const spot=document.createElement('div'); spot.className='gspot'; spot.id='gspot';
+    const bub=document.createElement('div'); bub.className='gbub'; bub.id='gbub'; bub.setAttribute('role','status');
+    document.body.append(spot, bub);
+    bub.addEventListener('click', e=>{
+      if(e.target.closest('[data-gx]')){ stopGuide(); return; }
+      if(e.target.closest('[data-gn]')){ const s=guide.steps[guide.i]; if(s.last){ stopGuide(true); return; } goStep(guide.i+1); }
+    });
+    guide.steps=guideSteps(); goStep(0); loopGuide();
+  }
+  function goStep(i){
+    const g=guide; if(!g) return; g.i=i; const s=g.steps[i]; if(!s){ stopGuide(true); return; }
+    if(s.enter) s.enter();
+    g.last=''; Sound.play('tap');
+    const bub=$('#gbub'); bub.classList.remove('in'); void bub.offsetWidth; bub.classList.add('in');
+    bub.innerHTML=`<div class="gstep">Passo ${i+1} di ${g.steps.length}</div><p>${s.text}</p><div class="gbtns"><button type="button" class="linkbtn" data-gx>Esci dalla guida</button>${s.next?`<button type="button" class="pillbtn" data-gn>${s.last?'Fine':'Avanti'}</button>`:''}</div>`;
+    $('#gspot').className='gspot '+(s.cls||'');
+  }
+  function loopGuide(){
+    const g=guide; if(!g) return;
+    const s=g.steps[g.i];
+    if(s){
+      if(s.done && s.done()){ goStep(g.i+1); }
+      else {
+        const nb=$('#gbub [data-gn]'); if(nb && s.next) nb.disabled=!s.next();
+        placeGuide(s.t && s.t());
+      }
+    }
+    g.raf=requestAnimationFrame(loopGuide);
+  }
+  function placeGuide(el){
+    const spot=$('#gspot'), bub=$('#gbub'); if(!spot||!bub) return;
+    const vh=(window.visualViewport?visualViewport.height:innerHeight), vw=innerWidth, pad=8;
+    let key='none';
+    if(el){
+      const r=el.getBoundingClientRect(); const x=r.left-pad, y=r.top-pad, w=r.width+pad*2, h=r.height+pad*2;
+      key=[x,y,w,h].map(Math.round).join(',');
+      if(key!==guide.last){
+        spot.style.opacity=1; spot.style.left=x+'px'; spot.style.top=y+'px'; spot.style.width=w+'px'; spot.style.height=h+'px';
+        spot.style.borderRadius = Math.min(26, h/2)+'px';
+        const bw=bub.offsetWidth, bh=bub.offsetHeight;
+        let top = y+h+12+bh < vh-8 ? y+h+12 : y-12-bh;
+        if(top<10) top=Math.min(vh-bh-10, Math.max(10, y+h+12));
+        bub.style.top=top+'px'; bub.style.left=Math.max(12, Math.min(vw-bw-12, x+w/2-bw/2))+'px';
+      }
+    } else if(guide.last!=='none'){
+      spot.style.opacity=0; const bw=bub.offsetWidth; bub.style.left=(vw-bw)/2+'px'; bub.style.top=(vh*0.38)+'px';
+    }
+    guide.last=key;
+  }
+  function stopGuide(ok){
+    if(!guide) return; cancelAnimationFrame(guide.raf); guide=null;
+    ['#gspot','#gbub'].forEach(s=>{ const el=$(s); if(el){ el.style.opacity=0; setTimeout(()=>el.remove(), 300); } });
+    if(ok){ Sound.play('project'); glow(); toast({kind:'project', head:'Guida completata', text:'buon lavoro!'}); }
+  }
+  $('#guide-start').addEventListener('click', ()=>{ startGuide(); });
 
   /* ---------- installazione e avvio ---------- */
   $$('.tab[data-tab]').forEach(b=>{ const [l,ic]=TABS[b.dataset.tab]; b.innerHTML=`${ic}<span>${l}</span>${b.dataset.tab==='oggi'?'<span class="badge" hidden></span>':''}`; });
   $$('.side .nv[data-tab]').forEach(b=>{ const [l,ic]=TABS[b.dataset.tab]; b.innerHTML=`${ic}<span>${l}</span>${b.dataset.tab==='oggi'?'<span class="n" hidden></span>':''}`; });
-  $('#plus').innerHTML=I.plusb; $('#side-new').innerHTML=`${I.plusb}Nuovo`; $('#q-ico').innerHTML=I.search; $('#pull').innerHTML=I.search;
+  $('#credit-badge').innerHTML=badgeSvg(); $('#plus').innerHTML=I.plusb; $('#side-new').innerHTML=`${I.plusb}Nuovo`; $('#q-ico').innerHTML=I.search; $('#pull').innerHTML=I.search;
   let installEvt=null;
   window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); installEvt=e; $('#install').hidden=false; });
   $('#install').addEventListener('click', async ()=>{ if(!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt=null; $('#install').hidden=true; });
@@ -2403,7 +2566,7 @@ button{cursor:pointer;background:none;border:0;padding:0}
   let seen=false; try{ seen=sessionStorage.getItem('plancia-intro')==='1'; sessionStorage.setItem('plancia-intro','1'); }catch(e){}
   const splash=$('#splash');
   const needTour = !prefs.tutorialDone;
-  const afterSplash = () => { if(needTour && !prefs.tutorialDone) openTour(); else if(azione==='nuovo') openAdd('proj'); else if(azione==='appunto') openAdd('note'); };
+  const afterSplash = () => { if(needTour && !prefs.tutorialDone) openTour(true); else if(azione==='nuovo') openAdd('proj'); else if(azione==='appunto') openAdd('note'); };
   if(seen || reduce || azione){ splash.remove(); setTimeout(afterSplash, 50); }
   else {
     $('#splash-badge').innerHTML=badgeSvg();

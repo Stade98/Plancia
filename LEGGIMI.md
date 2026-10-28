@@ -80,6 +80,12 @@ Sul computer: tasto destro o i tre puntini che compaiono passando sopra una voce
 
 **Tasto +.** Crea un *Progetto* (con ambito, scadenza e modello), una *Voce* in un progetto esistente o un *Appunto*. Gli appunti compaiono in cima al Tabellone; con **Sposta** li porti nel progetto giusto.
 
+**Colore del tema.** In *Impostazioni → Aspetto → Colore* scegli tra blu, azzurro, verde, arancione, rosso, rosa, viola e grafite; cambiano anche gli aloni dello sfondo. Il colore si sincronizza con l'account.
+
+**Guida passo passo.** Al primo avvio, dopo le schede introduttive, una guida accompagna sull'app vera: illumina il punto da toccare e spiega ogni passaggio, dalla creazione del primo progetto al menu delle azioni. Si può riavviare quando si vuole da *Impostazioni → Guida*.
+
+**Tocco sugli ambiti.** Tutta la bolla di un ambito è cliccabile: si apre il progetto più vicino al punto toccato.
+
 **Altre funzioni:** voci ricorrenti (si ripianificano quando le completi), modalità Concentrazione con timer, riepilogo della settimana, modelli, duplica, archivio, annulla dopo un'eliminazione, scorciatoie tenendo premuta l'icona dell'app.
 
 **Suoni.** Brevi e discreti; si disattivano in Impostazioni. Su iPhone seguono l'interruttore silenzioso e la vibrazione non è disponibile per le app web.
@@ -95,7 +101,7 @@ La persona vede solo quel ramo (la voce e le sue sottofasi). Con il permesso di 
 
 ## 6. Impostazioni
 
-**Account** (accesso, sincronizzazione, uscita), **Personale** (nome per il saluto, titolo dell'animazione di apertura), **Aspetto** (tema, suoni), **Ambiti** (icona di ogni ambito), **Modelli**, **Avvisi** (notifiche, anticipo, scadenze nel calendario), **Copie di sicurezza**, **Guida** (rivedi il tutorial, installa).
+**Account** (accesso, sincronizzazione, uscita), **Personale** (nome per il saluto, titolo dell'animazione di apertura), **Aspetto** (tema, suoni), **Ambiti** (icona di ogni ambito), **Modelli**, **Avvisi** (notifiche, anticipo, scadenze nel calendario), **Copie di sicurezza**, **Aspetto** comprende anche il colore del tema; **Guida** (guida passo passo, schede introduttive, installa).
 
 ## 7. Avvisi
 
