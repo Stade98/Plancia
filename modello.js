@@ -38,7 +38,7 @@
     return {
       title: String(p.title || 'Senza titolo'), category: String(p.category || ''), priority: toPrio(p.priority),
       deadline: okDate(p.deadline) ? p.deadline : '', note: String(p.note || ''),
-      example: !!p.example, archived: !!p.archived, template: !!p.template, pinned: !!p.pinned, inbox: !!p.inbox,
+      icon: String(p.icon || ''), example: !!p.example, archived: !!p.archived, template: !!p.template, pinned: !!p.pinned, inbox: !!p.inbox,
       order: p.order || 0, createdAt: p.createdAt || base, updatedAt: base, mu: p.mu || base,
       deletedNodes: Object.assign({}, p.deletedNodes || {}),
       items: items.map(n => normalizeNode(n, base))
@@ -119,7 +119,12 @@
       out[id] = w;
     });
     const pa = a.prefs || {}, pb = b.prefs || {};
-    const prefs = (pb.u || 0) > (pa.u || 0) ? pb : pa;
+    // vince la versione più recente, ma ciò che manca in quella si prende dall'altra
+    const [nuove, vecchie] = (pb.u || 0) > (pa.u || 0) ? [pb, pa] : [pa, pb];
+    const prefs = Object.assign({}, vecchie, nuove);
+    ['catIcons', 'manualGroups'].forEach(k => {
+      if (vecchie[k] || nuove[k]) prefs[k] = Object.assign({}, vecchie[k] || {}, nuove[k] || {});
+    });
     return { projects: out, deleted: del, prefs };
   }
 

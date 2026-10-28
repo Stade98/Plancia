@@ -1,14 +1,14 @@
 {
   "name": "Plancia Progetti",
   "short_name": "Plancia",
-  "description": "Registro personale dei progetti: fasi e sottofasi annidate, scadenze, priorità e avvisi.",
+  "description": "Progetti, fasi e scadenze in un solo posto, sincronizzati tra telefono e computer e condivisibili.",
   "lang": "it",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#f5f3ee",
-  "theme_color": "#3a4150",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7",
   "icons": [
     {
       "src": "icons/icon-192.png",

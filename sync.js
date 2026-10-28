@@ -268,6 +268,7 @@ async function avvia() {
     try {
       const cred = await A.createUserWithEmailAndPassword(auth, emailEl.value.trim(), pass.value); pass.value = '';
       try { await A.sendEmailVerification(cred.user); } catch (e) {}
+      if (P.accountCreated) P.accountCreated();
     } catch (err) { stato('out', msg(err)); }
   });
   document.getElementById('au-reset').addEventListener('click', async () => {

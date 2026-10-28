@@ -2,37 +2,44 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // L'autore: sostituisci l'email qui sotto con la tua (tutta in minuscolo).
-    function autore() {
-      return request.auth != null && request.auth.token.email == "LA-TUA-EMAIL";
+    function collegato() {
+      return request.auth != null;
     }
     // Chi riceve una condivisione deve aver confermato la propria email.
-    function ospite() {
-      return request.auth != null && request.auth.token.email_verified == true;
+    function verificato() {
+      return collegato() && request.auth.token.email_verified == true;
+    }
+    // Un ramo condiviso appartiene a chi lo ha creato: il suo identificativo inizia con l'id dell'autore.
+    function proprietario(sid) {
+      return collegato() && sid.matches(request.auth.uid + '_.*');
     }
 
-    // I tuoi progetti: solo tu.
+    // I progetti di ogni persona: solo lei li legge e li modifica.
     match /utenti/{uid} {
-      allow read, write: if autore() && request.auth.uid == uid;
+      allow read, write: if collegato() && request.auth.uid == uid;
     }
 
-    // I rami condivisi: tu li crei e li gestisci; gli invitati vedono solo i propri,
+    // I rami condivisi: l'autore li crea e li gestisce; gli invitati vedono solo i propri,
     // e chi può modificare cambia soltanto le voci, non i permessi.
     match /condivisi/{sid} {
-      allow read: if autore()
-        || (ospite() && (request.auth.token.email in resource.data.editors
-                         || request.auth.token.email in resource.data.readers));
-      allow create, delete: if autore();
-      allow update: if autore()
-        || (ospite() && request.auth.token.email in resource.data.editors
+      allow read: if proprietario(sid)
+        || (verificato() && resource != null
+            && (request.auth.token.email in resource.data.editors
+                || request.auth.token.email in resource.data.readers));
+      allow create: if proprietario(sid) && request.resource.data.owner == request.auth.uid;
+      allow delete: if proprietario(sid);
+      allow update: if (proprietario(sid) && request.resource.data.owner == request.auth.uid)
+        || (verificato() && request.auth.token.email in resource.data.editors
             && request.resource.data.diff(resource.data).affectedKeys()
                  .hasOnly(['nodes', 'deletedNodes', 'updatedAt', 'log']));
     }
 
-    // Gli inviti: ognuno legge solo il proprio, solo tu li scrivi.
+    // Gli inviti: ognuno legge solo il proprio; chi condivide può aggiungere o togliere inviti.
     match /inviti/{email} {
-      allow read: if autore() || (ospite() && request.auth.token.email == email);
-      allow write: if autore();
+      allow read: if verificato() && request.auth.token.email == email;
+      allow create, update: if collegato()
+        && request.resource.data.keys().hasOnly(['shares', 'da'])
+        && request.resource.data.shares is list;
     }
   }
 }
