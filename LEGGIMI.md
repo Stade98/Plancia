@@ -69,6 +69,13 @@ Le voci con sottofasi e i progetti calcolano lo stato da soli.
 - **Modelli, Duplica, Archivio, Ricerca (lente in alto), Annulla dopo un'eliminazione.**
 - **Scorciatoie:** tenendo premuta l'icona dell'app sul telefono compaiono *Nuovo progetto*, *Appunto veloce* e *Oggi*.
 
+**Gesti sul telefono:**
+- **Scorri una voce verso destra** per farla avanzare di stato (Da fare → In corso → Completato); mentre scorri, compare lo stato che otterrai.
+- **Scorri una voce verso sinistra** per aprire il suo menu.
+- **Tieni premuti i sei puntini** a sinistra di una voce o di un progetto e trascinali per riordinarli.
+
+**Suoni e vibrazione:** ogni azione ha un suono breve e discreto (avvio, completamento, aggiunta, eliminazione, apertura, riordino); il completamento di un intero progetto ha una piccola melodia. Si disattivano da **Impostazioni → Aspetto**. Su iPhone i suoni seguono l'interruttore silenzioso del telefono e la vibrazione non è disponibile per le app web; su Android funzionano entrambi.
+
 ## 4. Condividere una voce
 
 1. Accedi al tuo account dalle impostazioni (pulsante in alto a destra).
