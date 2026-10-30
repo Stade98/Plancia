@@ -1,0 +1,67 @@
+{
+  "name": "Plancia Progetti",
+  "short_name": "Plancia",
+  "description": "Progetti, fasi e scadenze in un solo posto, sincronizzati tra telefono e computer e condivisibili.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7",
+  "icons": [
+    {
+      "src": "icons/icon-classica-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-classica-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-classica-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nuovo progetto",
+      "short_name": "Nuovo",
+      "url": "./?azione=nuovo",
+      "icons": [
+        {
+          "src": "icons/icon-classica-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Appunto veloce",
+      "short_name": "Appunto",
+      "url": "./?azione=appunto",
+      "icons": [
+        {
+          "src": "icons/icon-classica-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Oggi",
+      "short_name": "Oggi",
+      "url": "./?vista=oggi",
+      "icons": [
+        {
+          "src": "icons/icon-classica-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

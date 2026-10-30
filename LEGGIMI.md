@@ -13,7 +13,8 @@ Web app per seguire progetti, fasi e sottofasi annidate senza limite, con scaden
 | `config.js` | Collegamento al progetto Firebase (già compilato) |
 | `sw.js` | Funzionamento senza connessione e notifiche |
 | `manifest.webmanifest` | Nome, colori, icone e scorciatoie per l'installazione |
-| `icons/` | Icone dell'app |
+| `icons/` | Icone dell'app (anche le sei varianti) |
+| `manifest-*.webmanifest` | Dati di installazione per ciascuna icona |
 | `regole-firestore.txt` | Regole di sicurezza da copiare in Firebase |
 | `LEGGIMI.md` | Queste istruzioni |
 
@@ -21,7 +22,7 @@ Web app per seguire progetti, fasi e sottofasi annidate senza limite, con scaden
 
 1. Apri il repository `plancia` su github.com.
 2. Premi **Add file** e poi **Upload files**.
-3. Trascina i file ricevuti. Quelli con lo stesso nome vengono sostituiti.
+3. Trascina i file ricevuti, compresa la cartella `icons` se è nel pacchetto. Quelli con lo stesso nome vengono sostituiti.
 4. Premi **Commit changes** e attendi uno o due minuti.
 5. Su ogni dispositivo chiudi del tutto l'app e riaprila due volte: la prima scarica la versione nuova, la seconda la mostra.
 
@@ -85,6 +86,16 @@ Sul computer: tasto destro o i tre puntini che compaiono passando sopra una voce
 **Proposte.** In *Impostazioni → Proposte* chiunque usi l'app può inviare un'idea, un problema o un progetto. Il messaggio arriva per email all'autore tramite FormSubmit (servizio gratuito, senza account); se chi scrive indica la propria email, basta premere «Rispondi».
 
 **Sorprese.** La Plancia nasconde qualche easter egg. Non sono elencati da nessuna parte: si trovano per caso.
+
+**Data e orario.** Dal menu di una voce, *Data e orario* permette di indicare un solo giorno oppure, con *Più giorni*, un intervallo dal… al…; l'orario può essere *dalle… alle…*, oppure si attiva *Tutto il giorno*. Gli impegni su più giorni compaiono in ogni giorno del calendario e nella scheda Oggi finché sono in corso; il ritardo si calcola sulla data di fine.
+
+**Disposizione libera (computer).** In alto nel Tabellone scegli *Griglia* oppure *Libera*. Con *Libera* prendi un ambito dal titolo e trascinalo in qualunque punto: si solleva, si inclina seguendo il movimento, si aggancia ai bordi degli altri ambiti e, se lo posi sopra un altro, quello scivola più in basso. Le posizioni restano salvate su quel computer; *Metti in ordine* le risistema in automatico. Sul telefono, in modalità *Riordina*, ciò che trascini segue il dito e gli altri elementi scivolano al loro posto.
+
+**Ambiti richiudibili.** Nel Tabellone tocca il nome di un ambito per chiuderlo o riaprirlo: da chiuso mostra una riga di riepilogo (avanzamento, urgenze, prossima scadenza). L'app ricorda la scelta anche dopo giorni. *Chiudi tutti* / *Apri tutti* agisce su tutti insieme; l'interruttore *Ambiti richiudibili* in *Impostazioni → Aspetto* attiva o disattiva la funzione.
+
+**Icona.** Al primo accesso, nella scheda *Il tuo stile*, e poi da *Impostazioni → Personale → Icona* si sceglie l'icona tra sei scene e una serie di simboli; compare all'apertura e nell'app. Sulla schermata Home del telefono possono andare le sei scene: per cambiarla lì, togli l'app dalla Home e aggiungila di nuovo (su iPhone accedi prima al tuo account, perché l'app reinstallata riparte vuota).
+
+**Schermata Home.** Al primo accesso dal telefono una guida illustrata (iPhone o Android) mostra come aggiungere la Plancia alla schermata Home; si riapre da *Impostazioni → Guida*.
 
 **Colore del tema.** In *Impostazioni → Aspetto → Colore* scegli tra blu, azzurro, verde, arancione, rosso, rosa, viola e grafite; cambiano anche gli aloni dello sfondo. Il colore si sincronizza con l'account.
 

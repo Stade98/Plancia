@@ -18,7 +18,10 @@
     const kids = Array.isArray(n.children) ? n.children : (Array.isArray(n.tasks) ? n.tasks : []);
     const out = {
       id: n.id || uid(), title: String(n.title || ''), status, done: status === 'done',
-      deadline: okDate(n.deadline) ? n.deadline : '', time: /^\d{2}:\d{2}$/.test(n.time || '') ? n.time : '',
+      deadline: okDate(n.deadline) ? n.deadline : '', time: !n.allDay && /^\d{2}:\d{2}$/.test(n.time || '') ? n.time : '',
+      start: okDate(n.start) && okDate(n.deadline) && n.start < n.deadline ? n.start : '',
+      endTime: !n.allDay && /^\d{2}:\d{2}$/.test(n.endTime || '') ? n.endTime : '',
+      allDay: !!n.allDay && okDate(n.deadline),
       priority: toPrio(n.priority), note: String(n.note || ''), link: String(n.link || ''),
       assignee: String(n.assignee || ''), repeat: RIPETI.includes(n.repeat) ? n.repeat : '',
       completedAt: status === 'done' ? (n.completedAt || Date.now()) : 0,
