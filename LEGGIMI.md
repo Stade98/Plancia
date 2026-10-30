@@ -80,6 +80,12 @@ Sul computer: tasto destro o i tre puntini che compaiono passando sopra una voce
 
 **Tasto +.** Crea un *Progetto* (con ambito, scadenza e modello), una *Voce* in un progetto esistente o un *Appunto*. Gli appunti compaiono in cima al Tabellone; con **Sposta** li porti nel progetto giusto.
 
+**Calendario del mese.** Nella scheda *Oggi* il selettore *Settimana | Mese* mostra tutto il mese. I giorni con impegni sono colorati con un'intensità proporzionale al numero di scadenze (uno, due, tre o più); quelli con ritardi sono rossi; un puntino rosso segnala un'urgenza e un triangolino la scadenza di un progetto. Tocca un giorno per vederne gli impegni; senza selezione compaiono tutte le scadenze del mese, divise per giorno. Si cambia mese con le frecce o scorrendo di lato.
+
+**Proposte.** In *Impostazioni → Proposte* chiunque usi l'app può inviare un'idea, un problema o un progetto. Il messaggio arriva per email all'autore tramite FormSubmit (servizio gratuito, senza account); se chi scrive indica la propria email, basta premere «Rispondi».
+
+**Sorprese.** La Plancia nasconde qualche easter egg. Non sono elencati da nessuna parte: si trovano per caso.
+
 **Colore del tema.** In *Impostazioni → Aspetto → Colore* scegli tra blu, azzurro, verde, arancione, rosso, rosa, viola e grafite; cambiano anche gli aloni dello sfondo. Il colore si sincronizza con l'account.
 
 **Guida passo passo.** Al primo avvio, dopo le schede introduttive, una guida accompagna sull'app vera: illumina il punto da toccare e spiega ogni passaggio, dalla creazione del primo progetto al menu delle azioni. Si può riavviare quando si vuole da *Impostazioni → Guida*.
@@ -112,6 +118,12 @@ La persona vede solo quel ramo (la voce e le sue sottofasi). Con il permesso di 
 
 Anche con la sincronizzazione attiva, conviene scaricare ogni tanto un **backup (.json)** e conservarlo sul computer. **Importa un backup** aggiunge i progetti del backup a quelli presenti. **Elenco per Excel** produce una tabella con tutte le voci.
 
-## 9. Aggiornamenti futuri
+## 9. Attivare le proposte (una sola volta)
+
+La prima proposta inviata dall'app non arriva subito: FormSubmit manda all'indirizzo dell'autore un'email intitolata «Action Required: Activate FormSubmit». Apri quella email e premi **Activate Form**. Da quel momento le proposte arrivano normalmente. Conviene fare tu stesso la prima prova da *Impostazioni → Proposte*.
+
+Se un domani preferisci che l'indirizzo non compaia nel codice pubblico, dopo l'attivazione FormSubmit fornisce un codice alternativo da usare al posto dell'email: basta chiederlo nella prossima versione.
+
+## 10. Aggiornamenti futuri
 
 Per una nuova versione ripeti il punto 1. Il file `config.js` contiene il collegamento a Firebase: se un pacchetto futuro ne contenesse uno vuoto, non caricarlo. I dati salvati non vengono toccati.
