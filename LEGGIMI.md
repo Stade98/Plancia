@@ -58,7 +58,7 @@ Da sapere prima di invitare altre persone:
 
 ## 4. Come si usa
 
-**Sezioni.** Sul telefono la barra in basso porta a *Tabellone*, *Oggi*, *Cerca* e *Impostazioni*; il tasto **+** al centro aggiunge. Sul computer le stesse sezioni sono nella barra a sinistra, con l'elenco degli ambiti, e il progetto aperto compare nel pannello a destra.
+**Sezioni.** Sul telefono la barra in basso porta a *Tabellone*, *Oggi*, *Calendario* e *Impostazioni*; il tasto **+** al centro aggiunge. Sul computer le stesse sezioni sono nella barra a sinistra, con l'elenco degli ambiti, e il progetto aperto compare nel pannello a destra.
 
 **Tabellone.** I progetti sono raccolti per ambito, ciascuno con la linea di avanzamento e l'indicazione più importante (ritardo, urgenza, prossima scadenza). Gli ambiti e i progetti si ordinano da soli in base alla scadenza più vicina; con **Riordina** puoi trascinarli e scegliere un ordine personale. Tirando verso il basso il Tabellone si apre la ricerca.
 
@@ -80,7 +80,7 @@ Sul computer: tasto destro o i tre puntini che compaiono passando sopra una voce
 
 **Tasto +.** Crea un *Progetto* (con ambito, scadenza e modello), una *Voce* in un progetto esistente o un *Appunto*. Gli appunti compaiono in cima al Tabellone; con **Sposta** li porti nel progetto giusto.
 
-**Calendario del mese.** Nella scheda *Oggi* il selettore *Settimana | Mese* mostra tutto il mese. I giorni con impegni sono colorati con un'intensità proporzionale al numero di scadenze (uno, due, tre o più); quelli con ritardi sono rossi; un puntino rosso segnala un'urgenza e un triangolino la scadenza di un progetto. Tocca un giorno per vederne gli impegni; senza selezione compaiono tutte le scadenze del mese, divise per giorno. Si cambia mese con le frecce o scorrendo di lato.
+**Calendario.** La scheda *Calendario* (sul telefono nella barra in basso, sul computer nella barra laterale) mostra tutto il mese, nello stile del Calendario di Apple: in ogni giorno compaiono i titoli degli impegni come piccole etichette (azzurre le scadenze, piene quelle dei progetti, rosse quelle in ritardo, barrate le completate); oggi è il cerchio colorato. Tocca un giorno per vederne gli impegni sotto il calendario; senza selezione compaiono tutte le scadenze del mese. Si cambia mese con le frecce o scorrendo di lato. La ricerca si apre con la lente accanto al titolo del Tabellone o tirando il Tabellone verso il basso.
 
 **Proposte.** In *Impostazioni → Proposte* chiunque usi l'app può inviare un'idea, un problema o un progetto. Il messaggio arriva per email all'autore tramite FormSubmit (servizio gratuito, senza account); se chi scrive indica la propria email, basta premere «Rispondi».
 
@@ -120,7 +120,7 @@ Anche con la sincronizzazione attiva, conviene scaricare ogni tanto un **backup 
 
 ## 9. Attivare le proposte (una sola volta)
 
-La prima proposta inviata dall'app non arriva subito: FormSubmit manda all'indirizzo dell'autore un'email intitolata «Action Required: Activate FormSubmit». Apri quella email e premi **Activate Form**. Da quel momento le proposte arrivano normalmente. Conviene fare tu stesso la prima prova da *Impostazioni → Proposte*.
+La prima proposta inviata dall'app non arriva subito (l'app lo segnala): FormSubmit manda all'indirizzo dell'autore un'email intitolata «Action Required: Activate FormSubmit». Apri quella email e premi **Activate Form**. Da quel momento le proposte arrivano normalmente. Conviene fare tu stesso la prima prova da *Impostazioni → Proposte*. Se l'email di attivazione non arriva, controlla Spam e Promozioni; se l'invio non riesce (per esempio per un blocco delle pubblicità nel browser), l'app offre il pulsante *Invia con l'app di posta*, che prepara lo stesso messaggio.
 
 Se un domani preferisci che l'indirizzo non compaia nel codice pubblico, dopo l'attivazione FormSubmit fornisce un codice alternativo da usare al posto dell'email: basta chiederlo nella prossima versione.
 
