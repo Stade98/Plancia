@@ -1,6 +1,6 @@
 // Plancia Progetti: funzionamento senza connessione.
 // Quando modifichi i file dell'app, aumenta il numero di versione qui sotto.
-const VERSIONE = 'plancia-v20';
+const VERSIONE = 'plancia-v22';
 const FILE_APP = [
   './',
   './index.html',
@@ -9,10 +9,10 @@ const FILE_APP = [
   './modello.js',
   './icone.js',
   './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png'
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
+  './apple-touch-icon.png'
 ];
 const ESTERNI = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.gstatic.com'];
 
