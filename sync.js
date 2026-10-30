@@ -7,6 +7,15 @@ const P = window.Plancia;
 const M = window.PlanciaModel;
 const cfg = window.PLANCIA_FIREBASE;
 const V = '10.12.2';
+const ADMIN = 'stade1998@gmail.com';
+
+// tipo di dispositivo per le statistiche d'uso: computer oppure telefono/tablet
+function dispositivo() {
+  const ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod|Android|Mobile/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) return 'mobile';
+  return 'pc';
+}
+const oggiISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 
 const MESSAGGI = {
   'auth/invalid-email': 'L’indirizzo email non è valido.',
@@ -144,7 +153,38 @@ async function avvia() {
     });
   }
 
+  /* ---------- statistiche d'uso (mai il contenuto dei progetti) ---------- */
+  let statInizio = 0, statTimer = null;
+  function statRef() { return utente ? F.doc(db, 'statistiche', utente.uid) : null; }
+  async function registraUso() {
+    const r = statRef(); if (!r) return;
+    const dev = dispositivo(), chiave = 'plancia-stat-' + utente.uid + '-' + oggiISO();
+    let nuova = true; try { nuova = sessionStorage.getItem(chiave) !== '1'; sessionStorage.setItem(chiave, '1'); } catch (e) {}
+    const creato = utente.metadata && utente.metadata.creationTime ? Date.parse(utente.metadata.creationTime) : null;
+    const dati = { email, creato, ultimo: Date.now(), ultimoDisp: dev, installata: !!(matchMedia('(display-mode: standalone)').matches || navigator.standalone),
+      versione: P.version || '', conteggi: P.usageCounts ? P.usageCounts() : {}, giorni: F.arrayUnion(oggiISO() + '|' + dev) };
+    if (nuova) { dati.aperture = { [dev]: F.increment(1) }; dati.ore = { [String(new Date().getHours())]: F.increment(1) }; }
+    try { await F.setDoc(r, dati, { merge: true }); } catch (e) {}
+  }
+  async function salvaTempo() {
+    const r = statRef(); if (!r || !statInizio) return;
+    const min = Math.min(60, (Date.now() - statInizio) / 60000); statInizio = document.hidden ? 0 : Date.now();
+    if (min < 0.15) return;
+    const fz = P.drainUsage ? P.drainUsage() : {}, funzioni = {};
+    Object.entries(fz).forEach(([k, n]) => { funzioni[k] = F.increment(n); });
+    const dati = { minuti: { [dispositivo()]: F.increment(Math.round(min * 10) / 10) }, ultimo: Date.now() };
+    if (Object.keys(funzioni).length) dati.funzioni = funzioni;
+    try { await F.setDoc(r, dati, { merge: true }); } catch (e) {}
+  }
+  document.addEventListener('visibilitychange', () => { if (document.hidden) salvaTempo(); else { statInizio = Date.now(); registraUso(); } });
+  window.addEventListener('pagehide', salvaTempo);
+
   window.PlanciaSync = {
+    isAdmin() { return !!utente && email === ADMIN; },
+    async loadStats() {
+      const snap = await F.getDocs(F.collection(db, 'statistiche'));
+      const out = []; snap.forEach(d => out.push(Object.assign({ uid: d.id }, d.data()))); return out;
+    },
     get user() { return utente ? { email, uid: utente.uid, owner: autore, verified: utente.emailVerified } : null; },
     async share(pid, nodeId, e, perm) {
       e = String(e || '').trim().toLowerCase();
@@ -238,6 +278,7 @@ async function avvia() {
       const unito = M.mergeState(loc, r);
       const daInviare = !M.same(M.mergeState(r, { projects: {} }).projects, unito.projects) || (primo && !snap.exists());
       P.apply(unito);
+      if (primo && autore) { statInizio = Date.now(); registraUso(); clearInterval(statTimer); statTimer = setInterval(() => { if (!document.hidden) salvaTempo(); }, 5 * 60 * 1000); }
       primo = false;
       if (daInviare) programma('utente', inviaUtente, 200);
       else stato('ok', `Ultima sincronizzazione alle ${ora()}.`);

@@ -107,7 +107,11 @@ Sul computer: tasto destro o i tre puntini che compaiono passando sopra una voce
 
 **Suoni.** Brevi e discreti; si disattivano in Impostazioni. Su iPhone seguono l'interruttore silenzioso e la vibrazione non è disponibile per le app web.
 
-## 5. Condividere una voce
+## 5. Condividere
+
+Nella pagina di ogni progetto c'è il pulsante **Condividi** (le due persone, in alto accanto a ⋯). Da lì condividi **tutto il progetto** con un'email, scegliendo *Può modificare* o *Solo lettura*, oppure **una sola fase**. Serve aver fatto l'accesso all'account; chi riceve deve accedere con la stessa email e confermarla. Si può condividere anche tenendo premuta una voce e scegliendo *Condividi*.
+
+### Dettagli
 
 1. Accedi al tuo account in Impostazioni.
 2. Tieni premuta la voce da condividere, a qualunque livello, e scegli **Condividi**.
@@ -116,7 +120,13 @@ Sul computer: tasto destro o i tre puntini che compaiono passando sopra una voce
 
 La persona vede solo quel ramo (la voce e le sue sottofasi). Con il permesso di modifica può cambiare stati, note e date, e aggiungere o eliminare sottofasi, ma non può eliminare la voce condivisa né condividerla a sua volta. Le modifiche si uniscono voce per voce, quindi più persone possono lavorare insieme senza sovrascriversi. Nella pagina del ramo compare l'ultima modifica fatta e da chi.
 
-## 6. Impostazioni
+## 6. Plancia amministratore
+
+Solo l'account **stade1998@gmail.com** vede in *Impostazioni* la voce **Plancia amministratore**. Mostra: numero di account, attivi oggi, in 7 e in 30 giorni, nuovi account, quanti tornano dopo la prima settimana, utenti attivi giorno per giorno divisi fra PC e smartphone, aperture, minuti e persone per tipo di dispositivo, ore di utilizzo, funzioni più usate, numeri dei contenuti, versioni in uso, colori scelti e l'elenco degli account (esportabile per Excel).
+
+Per ogni account si registrano solo statistiche d'uso: aperture, minuti, giorni di utilizzo, tipo di dispositivo, se l'app è installata e quanti progetti e voci ci sono. Mai il contenuto dei progetti. I dati partono dalla versione 24. Per vederli serve aver incollato in Firebase le regole aggiornate di `regole-firestore.txt` (punto 2).
+
+## 6b. Impostazioni
 
 **Account** (accesso, sincronizzazione, uscita), **Personale** (nome per il saluto, titolo dell'animazione di apertura), **Aspetto** (tema, suoni), **Ambiti** (icona di ogni ambito), **Modelli**, **Avvisi** (notifiche, anticipo, scadenze nel calendario), **Copie di sicurezza**, **Aspetto** comprende anche il colore del tema; **Guida** (guida passo passo, schede introduttive, installa).
 

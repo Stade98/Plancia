@@ -9,6 +9,10 @@ service cloud.firestore {
     function verificato() {
       return collegato() && request.auth.token.email_verified == true;
     }
+    // L'amministratore dell'app: vede le statistiche d'uso di tutti gli account.
+    function amministratore() {
+      return collegato() && request.auth.token.email == "stade1998@gmail.com";
+    }
     // Un ramo condiviso appartiene a chi lo ha creato: il suo identificativo inizia con l'id dell'autore.
     function proprietario(sid) {
       return collegato() && sid.matches(request.auth.uid + '_.*');
@@ -32,6 +36,12 @@ service cloud.firestore {
         || (verificato() && request.auth.token.email in resource.data.editors
             && request.resource.data.diff(resource.data).affectedKeys()
                  .hasOnly(['nodes', 'deletedNodes', 'updatedAt', 'log']));
+    }
+
+    // Statistiche d'uso: ognuno scrive solo le proprie, solo l'amministratore le legge tutte.
+    match /statistiche/{uid} {
+      allow read: if amministratore() || (collegato() && request.auth.uid == uid);
+      allow write: if collegato() && request.auth.uid == uid;
     }
 
     // Gli inviti: ognuno legge solo il proprio; chi condivide può aggiungere o togliere inviti.
