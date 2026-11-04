@@ -63,6 +63,18 @@ Da sapere prima di invitare altre persone:
 
 **Tabellone.** I progetti sono raccolti per ambito, ciascuno con la linea di avanzamento e l'indicazione più importante (ritardo, urgenza, prossima scadenza). Gli ambiti e i progetti si ordinano da soli in base alla scadenza più vicina; con **Riordina** puoi trascinarli e scegliere un ordine personale. Tirando verso il basso il Tabellone si apre la ricerca.
 
+**Bolle compatte o estese.** Sopra gli ambiti il selettore **Compatta / Estesa** sceglie quanto mostrare. In *Estesa* ogni progetto mostra tutte le sue fasi e sottofasi, con il cerchio per completarle, le date e l'avanzamento delle fasi con sottofasi; la freccia accanto a una fase la chiude o la riapre. In *Compatta* resta solo l'indicazione più importante. Sul computer le bolle si incastrano a mattoncini, senza spazi vuoti.
+
+**Linea del tempo.** In cima al Tabellone una riga per ogni ambito mostra le scadenze sul calendario, con la linea di oggi:
+- **segni rossi**: urgenti o in ritardo (quelli in ritardo pulsano e stanno sul bordo sinistro);
+- **rombo**: scadenza dell'intero progetto (traguardo);
+- **punto pieno**: fase principale o fase con sottofasi;
+- **punto piccolo**: singola voce;
+- **capsula**: impegno su più giorni;
+- **numero**: più impegni nello stesso giorno o in giorni vicini; il cerchio tratteggiato a destra conta quelli oltre il periodo visibile.
+
+Si sceglie il periodo (**2 sett.**, **Mese**, **3 mesi**) e si possono mostrare solo gli **Importanti** (urgenti, ritardi, fasi principali, traguardi). Sul computer, passando sopra un ambito la riga si apre come una bolla con un binario per ogni progetto; passando sopra un segno compare il dettaglio con progetto, fase, orario e il cerchio per completare la voce. Sul telefono si fa lo stesso toccando. Toccando il titolo la linea si riduce a una riga; la scelta resta salvata.
+
 **Progetto.** Tocca un progetto per aprirlo. In alto trovi ambito, titolo, avanzamento e nota; sotto, le fasi con le sottofasi. Il campo in fondo aggiunge una fase. Con **Riordina** sposti le voci; con **⋯** trovi le azioni sul progetto (urgente, fissa in alto, scadenza, ambito, icona, nota, duplica, modello, archivia, elimina). Per tornare indietro tocca la freccia o scorri dal bordo sinistro dello schermo.
 
 **Stato delle voci.** Il cerchio indica solo se una voce è fatta o no. Una voce con sottofasi è completata quando lo sono tutte; toccando il suo cerchio si completano (o si riaprono) tutte insieme. Due etichette facoltative si attivano solo dove servono:
@@ -102,6 +114,8 @@ Sul computer: tasto destro o i tre puntini che compaiono passando sopra una voce
 **Guida passo passo.** Al primo avvio, dopo le schede introduttive, una guida accompagna sull'app vera: illumina il punto da toccare e spiega ogni passaggio, dalla creazione del primo progetto al menu delle azioni. Si può riavviare quando si vuole da *Impostazioni → Guida*.
 
 **Tocco sugli ambiti.** Tutta la bolla di un ambito è cliccabile: si apre il progetto più vicino al punto toccato.
+
+**Avvisi a isola.** Gli avvisi compaiono in alto come una capsula nera che si allarga e si richiude, con un'animazione diversa per ogni evento (voce completata, progetto concluso, «In corso», eliminazione con il conto alla rovescia per *Annulla*). In *Concentrazione*, **Riduci** lascia il timer attivo in una piccola capsula con l'anello di avanzamento: toccala per riaprirlo.
 
 **Altre funzioni:** voci ricorrenti (si ripianificano quando le completi), modalità Concentrazione con timer, riepilogo della settimana, modelli, duplica, archivio, annulla dopo un'eliminazione, scorciatoie tenendo premuta l'icona dell'app.
 
